@@ -1,0 +1,24 @@
+<div id="center_it">
+<h1>Sign up</h1>
+
+<%= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :multipart => true })  do |f| %>
+    <%= devise_error_messages! %>
+
+
+    <% f.inputs do %>
+      <%= f.input :first_name, :label => "Prénom" %>
+      <%= f.input :last_name, :label => "Nom" %>
+      <%= f.input :email %>
+      <%= f.input :password %>
+      <%= f.input :password_confirmation, :as => :password, :label => "Confirmation" %>
+
+    <% end %>
+
+    <% f.buttons do %>
+      <%= f.commit_button %>
+    <% end %>
+
+<% end %>
+
+<%= render :partial => "devise/shared/links" %>
+</div>

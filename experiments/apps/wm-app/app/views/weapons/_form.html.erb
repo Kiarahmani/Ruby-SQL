@@ -1,0 +1,44 @@
+<%= form_for @weapon do |f| %>
+  <%= display_errors @weapon %>
+
+	<div class="field">
+		<%= f.label :name %><br />
+		<%= f.text_field :name %>
+	</div>
+	<div class="field">
+		<%= f.label :ranged %><br />
+		<%= f.check_box :ranged %>
+	</div>
+
+	<div id="ranged_fields" style="display: none">
+		<div class="field">
+			<%= f.label :rng %><br />
+			<%= f.text_field :rng, :size => 2, :maxlength => 2 %>
+			Spray? <%= f.check_box :spray %>
+		</div>
+		<div class="field">
+			<%= f.label :rof %><br />
+			<%= f.text_field :rof, :size => 2, :maxlength => 2 %>
+		</div>
+		<div class="field">
+			<%= f.label :aoe %><br />
+			<%= f.text_field :aoe, :size => 2, :maxlength => 2 %>
+		</div>
+	</div>
+
+	<div class="field">
+		<%= f.label :pow %><br />
+		<%= f.text_field :pow, :size => 2, :maxlength => 2 %>
+	</div>
+
+	<div class="field">
+		<%= f.label :traits %><br />
+		<%= f.collection_select :trait_ids, Trait.order(:name), :id, :name, {}, {:multiple => true, :class => "multiselect"} %><br />
+		<p><%= link_to 'Add Trait', new_trait_path, :id => 'newtrait', :rel => 'updater' %></p>
+	</div>
+	<div class="actions">
+		<%= f.submit %>
+	</div>
+<% end %>
+
+<div id="x_newtrait"></div>

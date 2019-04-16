@@ -1,0 +1,132 @@
+body {
+  background-color: #4B7399;
+  font-family: Verdana, Helvetica, Arial;
+  font-size: 12px;
+}
+
+a img {
+  border: none;
+}
+
+a {
+  color: #0000FF;
+}
+
+.clear {
+  clear: both;
+  height: 0;
+  overflow: hidden;
+}
+
+#container {
+  width: 75%;
+  margin: 0 auto;
+  background-color: #FFF;
+  padding: 20px 40px;
+  border: solid 1px black;
+  margin-top: 20px;
+}
+
+#flash_notice, #flash_error, #flash_alert {
+  padding: 5px 8px;
+  margin: 10px 0;
+}
+
+#flash_notice {
+  background-color: #CFC;
+  border: solid 1px #6C6;
+}
+
+#flash_error, #flash_alert {
+  background-color: #FCC;
+  border: solid 1px #C66;
+}
+
+.fieldWithErrors {
+  display: inline;
+}
+
+.error_messages {
+  width: 400px;
+  border: 2px solid #CF0000;
+  padding: 0px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+  font-size: 12px;
+}
+
+.error_messages h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 10px;
+  font-size: 12px;
+  margin: 0;
+  background-color: #c00;
+  color: #fff;
+}
+
+.error_messages p {
+  margin: 8px 10px;
+}
+
+.error_messages ul {
+  margin: 0;
+}
+
+.stat_table {
+	text-align: center;
+}
+
+.stat_table .left_align {
+	text-align: left;
+}
+
+.stat_table th {
+	background: black;
+	color: white;
+	font-weight: normal;
+}
+
+.warjack_weapon .weapon_hand {
+	float: left;
+	text-align: center;
+	padding-top: 25px;
+}
+
+.warjack_weapon .weapon_stats {
+	margin-left: 15px;
+}
+
+#user_nav {
+	float: right;
+}
+
+.weapon_stats .stat_table {
+	width: 150px;
+}
+
+#damage_grid {
+	background: gray;
+}
+
+#damage_grid td {
+	border: 1px solid gray;
+	background: white;
+	font-size: 10px;
+	text-align: center;
+	width: 20px;
+	height: 20px;
+}
+
+#damage_grid .no_box {
+	background: gray;
+}
+
+.hidden {
+	display: none;
+}
+
+.multiselect {
+  height: 100px;
+}

@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+      <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => "form", class: "transparent-form" }) do |f| %>
+
+          <h3 class="text-center">Sign up</h3>
+
+          <div class="form-group">
+            <%= f.label :name, class: "hidden"  %>
+            <%= f.text_field :name, placeholder: "Name", autofocus: true, class: "form-control input-xl text-center" %>
+            <% if resource.errors[:name].present? %>
+              <small class="error"><%= resource.errors[:name].join(", ") %></small>
+            <% end %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :email, class: "hidden" %>
+            <%= f.email_field :email, class: "form-control input-xl text-center", placeholder: "Email" %>
+            <% if resource.errors[:email].present? %>
+              <small class="error"><%= resource.errors[:email].join(", ") %></small>
+            <% end %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password, class: "hidden" %>
+            <%= f.password_field :password, class: "form-control input-xl text-center", placeholder: "Password" %>
+            <% if resource.errors[:password].present? %>
+              <small class="error"><%= resource.errors[:password].join(", ") %></small>
+            <% end %>
+          </div>
+
+         <div class="form-group">
+            <%= f.label :password_confirmation, class: "hidden" %>
+            <%= f.password_field :password_confirmation, class: "form-control input-xl text-center", placeholder: "Password confirmation" %>
+            <% if resource.errors[:password_confirmation].present? %>
+              <small class="error"><%= resource.errors[:password_confirmation].join(", ") %></small>
+            <% end %>
+          </div>
+
+          <%= f.submit "Sign up", class: "btn btn-default btn-block btn-xl"%>
+
+      <% end %>
+    </div>
+  </div>
+
+  <p class="text-center">
+    <strong>
+      <%= link_to "Host your own or contribute on GitHub", "https://github.com/jdjkelly/quantify" %>
+    </strong>
+  </p>
+</div>

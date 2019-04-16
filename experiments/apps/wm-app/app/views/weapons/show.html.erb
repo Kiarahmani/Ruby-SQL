@@ -1,0 +1,18 @@
+<h1><%= @weapon.name %></h1>
+<% if @weapon.ranged %>
+	<%= render :partial => 'ranged', :locals => { :weapon => @weapon } %>
+<% else %>
+	<%= render :partial => 'mount', :locals => { :weapon => @weapon } %>
+<% end %>
+
+<%= render :partial => 'traits', :locals => { :weapon => @weapon } %>
+
+<h2>Models with this weapon</h2>
+<% @weapon.models.each do |model| %>
+	<%= model_link model %><br />
+<% end %>
+
+<br />
+
+<%= link_to('Edit', edit_weapon_path(@weapon)) + ' |' if can? :update, @weapon %>
+<%= link_to 'Back', weapons_path %>

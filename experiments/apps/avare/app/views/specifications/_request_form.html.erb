@@ -1,0 +1,99 @@
+
+<%= form_for @specification, :html => {:class => "yform full"} do |f| %>
+  <% if @specification.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@specification.errors.count, "error") %> prohibited this specification from being saved:</h2>
+      <ul>
+      <% @specification.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <fieldset>
+    <legend>Запрос</legend>
+    <div class="subcolumns">
+      <div class="c50l">
+        <div class="subcl type-select">
+          <%= f.label :project_id, "Проект" %>
+          <%= f.collection_select :project_id, Project.all, :id, :name, :include_blank => false %>
+        </div>
+        <div class="subcr type-select">
+          <%= f.label :category_id, "Категория" %>
+          <%= f.collection_select :category_id, Category.all, :id, :name, :include_blank => false %>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :entity, "Номенклатура" %>
+          <%= f.text_field :entity %>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :unit, "Ед.изм." %>
+          <%= f.text_field :unit %>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :supplier, "Поставщик" %>
+          <%= f.text_field :supplier %>
+        </div>
+      </div>
+      <div class="c50r">
+	      <div class="subcr type-text">
+          <%= f.label :quantity, "Количество" %>
+          <%= f.text_field :quantity %>
+        </div>
+        <div class="subcr type-text">
+          <%= f.label :price_with_vat, "Цена" %>
+          <%= f.text_field :price_with_vat %>
+        </div>
+        <div class="subcr type-text">
+          <%= f.label :coast_of_delivery, "Доставка" %>
+          <%= f.text_field :coast_of_delivery %>
+        </div>
+        <div class="subcr type-select" >
+          <%= f.label :contractor_id, "РСИ" %>
+          <%= f.collection_select :contractor_id, User.with_role("contractor"), :id, :name, :selected => current_user.id  %>
+        </div>
+        <div class="subcr type-text">
+          <%= f.label :notice, "Примечание" %>
+          <%= f.text_field :notice %>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="type-button">
+    <%= f.submit "Сохранить" %>
+    <%= f.submit "Отправить" %>
+    <%= f.submit "Удалить" if not @specification.new_record? %>
+  </div>
+<% end %>
+
+
+<%= form_tag "", :class => "yform full" do %>
+  <fieldset disabled>
+    <div>
+    <legend>Ответ</legend>
+      <div class="c50l">
+        <div class="subcl type-text">
+          <%= label_tag :recommended_conditions, 'Рекомендованная цена' %>
+          <%= text_field_tag :recommended_conditions, @specification.recommended_conditions, :disabled => true %>
+        </div>
+        <div class="subcl type-text">
+          <%= label_tag :recommended_notice, 'Примечание' %>
+          <%= text_field_tag :recommended_notice, @specification.recommended_notice, :disabled => true %>
+        </div>
+      </div>
+      <div class="c50r">
+        <div class="subcl type-text">
+          <%= label_tag :recommended_supplier, 'Рекомендованный поставщик' %>
+          <%= text_field_tag :recommended_supplier, @specification.recommended_supplier, :disabled => true %>
+        </div>
+        <div class="subcr type-text">
+          <%= label_tag :controller_id, 'Инспектор' %>
+          <%= text_field_tag :controller_id, if @specification.controller.nil? then "" else @specification.controller.name end, :disabled => true %>
+        </div>
+      </div>
+  </fieldset>
+<% end %>
+
+<br/>
+

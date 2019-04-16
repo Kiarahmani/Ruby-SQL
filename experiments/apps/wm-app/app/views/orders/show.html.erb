@@ -1,0 +1,13 @@
+<h1><%= @order.name %></h1>
+
+<p><%= @order.desc %></p>
+
+<h2>Models with this order</h2>
+<% @order.models.each do |model| %>
+	<%= model_link model %><br />
+<% end %>
+
+<br />
+
+<%= link_to('Edit', edit_order_path(@order)) + ' |' if can? :update, @order %>
+<%= link_to 'Back', orders_path %>

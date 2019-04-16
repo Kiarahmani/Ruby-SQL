@@ -1,0 +1,28 @@
+<table class="forum_table">
+
+
+  <tr>
+    <th>Topics</th>
+    <th>Derniers Posts</th>
+  </tr>
+
+
+  <% @topics.each do |topic| %>
+      <tr onclick="location.href='<%= url_for topic_path(topic.id) %>'" class="forum_list">
+        <td class="forum_name">
+          <p><a href="<%= url_for category_topic_path(topic.category.id,topic.id) %>"><%= topic.title %></a></p>
+          <p class="infopost">Informations informations informations information</p>
+        </td>
+
+        <td class="forum_info">
+          <p class="infopost"><%= link_to topic.title, topic_path(topic.id) %></p>
+          <p>Le <%= topic.created_at.strftime("%d/%m/%y")%> à <%= topic.created_at.strftime("%H:%M") %> par : <br /> <%= topic.user.first_name + " " + topic.user.last_name %></p>
+        </td>
+
+      </tr>
+  <% end %>
+
+  <p class="actionize"><%= link_to "Créer un topic", new_category_topic_path(@category.id) %></p>
+
+
+</table>

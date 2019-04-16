@@ -1,0 +1,23 @@
+{
+  "name": "Trado",
+  "version": "0.0.1",
+  "authors": [
+    "Tom Dallimore"
+  ],
+  "description": "Trado is a lightweight, easy to use e-commerce platform designed for sole traders and SME businesses.",
+  "license": "MIT",
+  "ignore": [
+    "vendor/assets/components"
+  ],
+  "dependencies": {
+    "jquery": "1.7.2",
+    "modernizr": "~2.7.2",
+    "jquery.scrollTo": "~1.4.11",
+    "typeahead.js": "~0.10.2",
+    "theia-sticky-sidebar": "~1.2.0",
+    "jquery-form": "~3.46.0"
+  },
+  "resolutions": {
+    "jquery": "1.7.2"
+  }
+}

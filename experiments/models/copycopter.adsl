@@ -1,0 +1,78 @@
+class Blurb {
+  0+ Localization localizations inverseof blurb
+  0..1 Project project
+}
+class Locale {
+  0..1 Project project
+  0+ Localization localizations inverseof locale
+}
+class Localization {
+  0..1 Blurb blurb
+  0..1 Locale locale
+  0..1 Version published_version
+  0+ Version versions inverseof localization
+}
+class Project {
+  0+ Blurb blurbs inverseof project
+  0..1 TextCache draft_cache
+  0+ Locale locales inverseof project
+  0..1 TextCache published_cache
+}
+class TextCache {
+}
+class Version {
+  0..1 Localization localization
+}
+
+action Api_V2_DeploysController__create {}
+action Api_V2_DraftBlurbsController__create {
+  at__blurbs = empty
+  at__locales = empty
+}
+action Api_V2_DraftBlurbsController__index {}
+action Api_V2_PublishedBlurbsController__index {}
+action BlurbsController__destroy {
+  blurb = oneof(Blurb)
+  delete(blurb.localizations)
+  delete(blurb)
+}
+action Flutie_StyleguidesController__show {}
+action LocalesController__new {
+  at__project = oneof(Project)
+}
+action ProjectsController__index {
+  at__projects = subset(Project)
+}
+action ProjectsController__show {
+  at__localizations = empty
+  at__project = oneof(Project)
+  at__locale = if (*) {
+    oneof(at__project.locales)
+  } else {
+    tryoneof(at__project.locales)
+  }
+  if (*) {
+    at__localizations = Localization
+  }
+}
+action VersionsController__create {
+  at__localization = oneof(Localization)
+  at__version = create((tryoneof(at__localization.versions).localization).versions)
+}
+action VersionsController__new {
+  at__localization = oneof(Localization)
+  at__version = create((tryoneof(at__localization.versions).localization).versions)
+  at__project = at__localization.blurb.project
+  at__locale = if (not isempty(at__localization.locale)) {
+    oneof(at__project.locales)
+  } else {
+    tryoneof(at__project.locales)
+  }
+}
+
+invariant blurbsHaveProjects: forall(Blurb b: not isempty(b.project))
+invariant localesHaveProjects: forall(Locale l: not isempty(l.project))
+invariant localesHaveUniqueProjects: forall(Locale l1, Locale l2: (l1 != l2) => (l1.project != l2.project))
+invariant localizationsHaveBlurbs: forall(Localization l: not isempty(l.blurb))
+invariant localizationsHaveLocales: forall(Localization l: not isempty(l.locale))
+invariant textCachesHaveProjects: forall(TextCache tc: exists(Project p: tc == p.published_cache))

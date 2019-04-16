@@ -1,0 +1,59 @@
+<div class="model_fields">
+	<div class="field">
+		<%= f.hidden_field :_destroy %>
+		<%= link_to_function 'Remove', 'remove_fields(this, "model_fields")' %>
+	</div>
+	<div class="field">
+		<%= f.label :name %><br />
+		<%= f.text_field :name %>
+	</div>
+	<div class="field">
+		<%= f.label :short_name %><br />
+		<%= f.text_field :short_name %>
+	</div>
+	<div class="field">
+		<%= f.label :spd %><br />
+		<%= f.text_field :spd, :size => 2, :maxlength => 2 %>
+	</div>
+	<div class="field">
+		<%= f.label :str %><br />
+		<%= f.text_field :str, :size => 2, :maxlength => 2 %>
+	</div>
+	<div class="field">
+		<%= f.label :mat %><br />
+		<%= f.text_field :mat, :size => 2, :maxlength => 2 %>
+	</div>
+	<div class="field">
+		<%= f.label :rat %><br />
+		<%= f.text_field :rat, :size => 2, :maxlength => 2 %>
+	</div>
+	<div class="field">
+		<%= f.label :def %><br />
+		<%= f.text_field :def, :size => 2, :maxlength => 2 %>
+	</div>
+	<div class="field">
+		<%= f.label :arm %><br />
+		<%= f.text_field :arm, :size => 2, :maxlength => 2 %>
+	</div>
+	<div class="field">
+		<%= f.label :cmd %><br />
+		<%= f.text_field :cmd, :size => 2, :maxlength => 2 %>
+	</div>
+	<div class="field">
+		<%= f.label :damage %><br />
+		<%= f.text_field :damage %>
+	</div>
+	<div class="field">
+		<%= f.label :base %><br />
+		<%= f.select :base, [['Small', 'Small'], ['Medium', 'Medium'], ['Large', 'Large']] %>
+	</div>
+	<%= f.label :orders %>
+	<%= f.fields_for :model_orders do |builder| %>
+		<%= render :partial => 'models/model_order_fields', :locals => { :f => builder } %>
+	<% end %>
+	<p id="add_order"><%= link_to_add_fields "Add Order", f, :model_orders, 'models' %> | <%= link_to 'New Order', new_order_path, :id => 'neworder', :rel => 'updater' %></p>
+	<%= f.fields_for :rules do |builder| %>
+		<%= render :partial => 'models/rule_fields', :locals => { :f => builder } %>
+	<% end %>
+	<p><%= link_to_add_fields "Add Rule", f, :rules, 'models' %></p>
+</div>

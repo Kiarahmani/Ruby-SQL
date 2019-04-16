@@ -1,0 +1,12 @@
+# pack-refs with: peeled fully-peeled 
+062115dcf9c995e5f84679ef406ff275de1ae365 refs/remotes/origin/master
+2943a21307ba902cb030d145d35c67ed46e1f009 refs/remotes/origin/rails4
+20fb2b10c9ae957fd273a4c2376d89d4c730bae6 refs/remotes/origin/resources
+a4b2c1d8eceac1a91f2177b3e91d138d37e149d3 refs/remotes/origin/ui-ux
+4bb35f92ad61748b45ee3cbd8c1d59dfd4328695 refs/tags/v0.9
+^9227519ac9eb87354fe59400ef7b4591c1dc7419
+ffac3c26f510954f955e150b5ff937114fd0fb7a refs/tags/v1.0
+^38f48754e7e1ea14d5628486792514f826ba9a0e
+b13494f84e052046bee2eaca3e40476035bf039b refs/tags/v1.1
+c292de727c08dc6e77f9c856a294a99ef0aa3f67 refs/tags/v1.2
+^1866fc82e76e0ecf442ad40a7fab934cc40b0634

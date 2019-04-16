@@ -1,0 +1,6 @@
+<h1> <%= @query %></h1>
+<% for account in @accounts do %>
+  <h2><%=h account.owner %></h2>
+  <p>account id: <%=h account.id %></p>
+  <p>balance: <%= account.balance %></p>
+<% end %>

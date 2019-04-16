@@ -1,0 +1,4 @@
+"UsersController__destroy","ac deletion [User]","z3",23,3,20,147,0.01,1167.36,0,"correct"
+"UsersController__index","ac read [User]","z3",10,3,12,96,0.0,1024.0,0,"correct"
+"UsersController__show","ac read [User]","z3",11,3,14,97,0.01,1873.92,23,"incorrect"
+"UsersController__update","ac read [User]","z3",11,3,15,93,0.0,1034.24,0,"correct"

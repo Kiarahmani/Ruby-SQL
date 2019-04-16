@@ -1,0 +1,193 @@
+# encoding: utf-8
+
+##
+# This class manage Event
+#
+class EventsController < ApplicationController
+  load_and_authorize_resource
+  before_filter :load_account, :load_settings, only: [:index, :filter]
+  layout :current_layout
+
+  has_scope :by_user_id
+  has_scope :by_author_user_id
+  has_scope :by_contact_id
+  has_scope :by_content_like
+  has_scope :by_event_type_id
+  has_scope :by_account_company_like
+
+  ##
+  # Show the full list of Events
+  #
+  # GET /events     Account.order("company").page(params[:page]).per(3)
+  # GET /events.json
+  def index
+    @event_new = @account.events.build if @account
+    @event_new.event_type_id = @event_new.default_event_type_id if @event_new
+
+    @events = apply_scopes(events).
+              order("date_begin DESC").
+              page(params[:page]).
+              per(@account ? 10 : 20)
+
+    flash.now[:alert] = "Pas d'évènements !" if @events.empty?
+
+    respond_to do |format|
+      format.html
+      format.json { render :json => @events }
+    end
+  end
+
+  ##
+  # Render the page to show one Event
+  #
+  # GET /events/1
+  # GET /events/1.json
+  def show
+    @event = Event.find# date_end(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render :json => @event }
+    end
+  end
+
+  ##
+  # Render the page with the form to create an Event
+  #
+  # GET /events/new
+  # GET /events/new.json
+  def new
+
+    @event = Event.new
+    @event.account_id = Account.find params[:account_id]
+    @event.date_end = Date.today
+    @event.event_type_id = @event.default_event_type_id
+
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render :json => @event }
+    end
+  end
+
+  ##
+  # Render the page to edit an existing event
+  #
+  # GET /events/1/edit
+  def edit
+    @event = Event.find(params[:id])
+  end
+
+  ##
+  # Process to create an new Event
+  #
+  # POST /events
+  # POST /events.json
+  def create
+    @event = Event.new(params[:event])
+    @event.created_by = current_user.id
+
+    @event.date_begin = params[:event][:date_begin]
+    @event.date_begin = @event.date_begin.change({:hour => params[:event]["date_begin(4i)"].to_i, :min => params[:event]["date_begin(5i)"].to_i})
+
+    @event.date_end = params[:event][:date_end]
+    @event.date_end = @event.date_end.change({:hour => params[:event]["date_end(4i)"].to_i, :min => params[:event]["date_end(5i)"].to_i})
+    if @event.date_end < @event.date_begin
+      flash[:alert] = "La date de fin doit être postérieure à la date de début!"
+      redirect_to :back
+    elsif @event.save
+	if params[:generate_task]== "yes"
+	  @event.notes2 = params[:notes]
+	  self.create_task
+	end
+	flash[:notice] = "L'évènement a été créé."
+	if params[:generate] == "yes" and params[:mail] == "yes"
+	  # UserMailer.mail_for(@event.user, @event.task, true).deliver
+	  flash[:notice] += "<br>Un email a été envoyé à #{@event.user.full_name}."
+	end
+	#redirect_to account_events_url(@event.account_id)
+	redirect_to session.delete(:return_to) || account_events_url(@event.account_id), notice: "L'évènement a été créé."
+    else
+      flash[:alert] = "Erreur indéterminée."
+      redirect_to :back
+    end
+
+  end
+
+  ##
+  # Modify an existing event into the DataBase
+  #
+  # PUT /events/1
+  # PUT /events/1.json
+  def update
+    @event = Event.find(params[:id])
+    @event.modified_by = current_user.id
+
+    respond_to do |format|
+      if @event.update_attributes(params[:event])
+        redirect_to session.delete(:return_to), notice: "L'évènement a été mis à jour."
+      else
+        format.html { render :action => "edit" }
+      end
+    end
+  end
+
+  ##
+  # Remove an existing Event from the Database
+  #
+  # DELETE /events/1
+  # DELETE /events/1.json
+  def destroy
+    @event = Event.find(params[:id])
+    @event.destroy
+    flash[:notice] = "L'évenement a été correctement supprimé"
+    redirect_to session.delete(:return_to) || account_events_url(@event.account_id)
+  end
+
+  ##
+  # Create a task for this event
+  #
+  def create_task()
+    # Create a new hashtable with the same key as can do the TasksController
+    # Create the task with the hash
+    @task = Task.new
+    @task.account_id = Account.find params[:event][:account_id]
+    @task.contact_id = Contact.find params[:event][:contact_id]
+    @task.user_id = User.find params[:event][:user_id]
+    @task.notes = params[:task][:notes]
+    @task.statut = params[:task][:statut]
+    @task.term = params[:task][:term]#.split('/').reverse!.join('/')
+    @task.created_by = current_user.id
+    @task.priority = params[:task][:priority].to_i
+    @task.title = params[:task][:title]
+
+    if @task.save
+      @event.task_id = @task.id
+      return true
+    else
+      return false
+    end
+  end
+
+  private
+    def load_account
+      @account = Account.find_by_id(params[:account_id])
+    end
+
+    def load_settings
+      #ClickToCall
+      @setting = Setting.all.first
+    end
+
+    def events
+      @account ? @account.events : Event.all
+    end
+
+    def current_layout
+      if @account && @account.persisted? && request.path_parameters[:action] == "index" # i prefer helper 'current_action'
+        "accounts_show"
+      else
+        "application"
+      end
+    end
+end

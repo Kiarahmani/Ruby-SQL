@@ -1,0 +1,513 @@
+/* Color palete */
+.water { color:#5582d1; }
+.earth { color:#4e3e2c; }
+.air { color:#f1fff7; }
+.fire { color:#ff8a19; }
+.wine { color:#4a040a; }
+.beer { color:#F0C030; }
+.caffe { color:#473523; }
+.caffe-cream { color:#b68d3d; }
+.espresso { color:#2c1901; }
+.caramel{ color:#ab671f; }
+.chocolate { color:#290200; }
+.black-pepper { color:#444334; }
+.pepper-lite { color:#8d8a72; }
+.lipstick { color:#c20c0c; }
+
+/*==== Color Palette ======
+    red           #c20c0c
+    dark-red      #711602
+    bright-blue   #A2D4E8
+    lite-blue     #D2DCDD
+    blue          #598A9E
+    dark-blue     #09526D
+    air           #F0F0F0
+===========================*/
+
+/* 
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com 
+Twitter: @rich_clark
+*/
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+body {
+    line-height:1;
+}
+
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section { 
+	display:block;
+}
+
+nav ul {
+    list-style:none;
+}
+
+blockquote, q {
+    quotes:none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content:'';
+    content:none;
+}
+
+a {
+    margin:0;
+    padding:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+/* change colours to suit your needs */
+ins {
+    background-color:#ff9;
+    color:#000;
+    text-decoration:none;
+}
+
+/* change colours to suit your needs */
+mark {
+    background-color:#ff9;
+    color:#000; 
+    font-style:italic;
+    font-weight:bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+/*abbr[title], dfn[title] {
+    border-bottom:1px dotted;
+    cursor:help;
+}*/
+
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+}
+
+/* change border colour to suit your needs */
+hr {
+    display:block;
+    height:1px;
+    border:0;   
+    border-top:1px solid #cccccc;
+    margin:1em 0;
+    padding:0;
+}
+
+input, select {
+    vertical-align:middle;
+}
+
+/*
+    Golden Grid - CSS Library
+    Author:Vladimir Carrer
+*/
+.main{margin:0 auto;  width:970px; padding-top:10px; background:#fff; }
+
+.g160,
+.g320,
+.g480,
+.g640,
+.g800,
+.g960,
+.g80,
+.g240,
+.g400,
+.g560,
+.g720,
+.g880,
+.g960 
+{float:left; display: inline; margin-left:10px;  } 
+
+.g160{width:150px; }
+.g320 {width:310px;}
+.g480{width:470px;}
+.g640{width:630px;}
+.g800{width:790px;}
+.g960{width:950px;}
+
+.g80 {width:70px;}
+.g240{width:230px;}
+.g400{width:390px;}
+.g560{width:550px;}
+.g720{width:710px;}
+.g880{width:870px;}
+
+.ml80 {margin-left:90px;}
+.ml160{margin-left:170px;}
+.ml240{margin-left:250px;}
+.ml320{margin-left:330px;}
+.ml400{margin-left:410px;}
+.ml480{margin-left:490px;}
+.ml560{margin-left:560px;}
+.ml640{margin-left:650px;}
+.ml720{margin-left:730px;}
+.ml800{margin-left:810px;}
+.ml880{margin-left:890px;}
+.ml960{margin-left:970px;}
+
+.inside{margin-left:0;}
+
+p.grid{ padding-left:10px;}
+  
+.clear {clear:both;}
+
+.clearfix:after, .main:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+     }
+     
+.clearfix, .main{ display:block;}
+
+/*
+    Baseline Rythm from http://topfunky.com/baseline-rhythm-calculator/
+    Font Family from http://www.codestyle.org/
+*/
+body {
+	font-size: 14px;
+	line-height: 1.5em;
+	margin: 0; padding: 0
+}
+h1 {
+	margin: 0;
+	font-size: 1.5714285714285714em;
+	line-height: 0.9545454545454546em;
+	margin-bottom: 0.9545454545454546em;
+}
+h2 {
+	margin: 0;
+	font-size: 1.4285714285714286em;
+	line-height: 1.05em;
+	margin-bottom: 1.05em;
+}
+h3 {
+	margin: 0;
+	font-size: 1.2857142857142858em;
+	line-height: 1.1666666666666667em;
+	margin-bottom: 1.1666666666666667em;
+}
+h4 {
+	margin: 0;
+	font-size: 1.1428571428571428em;
+	line-height: 1.3125em;
+	margin-bottom: 1.3125em;
+}
+p, ul, blockquote, pre, td, th, label {
+	margin: 0;
+	font-size: 1em;
+	line-height: 1.5em;
+	margin-bottom: 1.5em;
+}
+.small, p.small {
+	margin: 0;
+	font-size: 0.8571428571428571em;
+	line-height: 1.75em;
+	margin-bottom: 1.75em;
+}
+table {
+	border-collapse: collapse;
+	margin-bottom: 1.5em;
+}
+
+
+
+/* 
+    Page Styles
+*/
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	color:#333;
+/*	background: #F0F0F0;
+	margin-top: 10px;*/
+}
+h1, h2, h3, h4, h5, h6 {
+	font-weight:bold;
+}
+/*.main {
+	background-image: url(/images/baseline.png); background-repeat: repeat; background-position: 0 9px;
+}*/
+#header {
+	border-bottom:1px dotted #444;
+	margin-bottom:2em;
+}
+#logo {
+	margin:-5px 0px -6px 3px;
+/*	font-size:24px;
+	font-weight:bold;*/
+	float:left;
+/*	margin:0px;
+	padding:13px;
+	background:#f00;
+	color:#fff;
+	border-right:1px solid white;*/
+}
+#quicklinks {
+	text-align:right;
+	margin:0px 7px 10px 0px;
+	color:#333;
+	font-weight:bold;
+}
+#quicklinks a:link{
+	margin-left:8px;
+	color:#333;
+	text-decoration:none;
+}
+#quicklinks a:visited{color:#333; margin-left:8px;}
+#quicklinks a:hover{color:#333; text-decoration:underline;}
+#nav {
+	float:right;
+	border-top:1px solid #444;
+	margin-bottom:0px;
+}
+#flash_notice {
+	color:#007000;
+	font-family: 'Courier New', Courier,  monospace;
+}
+#flash_error {
+	color:#c20c0c;
+	font-family: 'Courier New', Courier,  monospace;
+}
+ol {
+	list-style: decimal;
+}
+ul {
+	list-style: disc;
+}
+li {
+	margin-left: 2em;
+}
+a {
+/*	font-weight:bold;*/
+/*	color:	#c20c0c;*/
+	color:	#12C;
+/*	color:	#2B6695;*/
+/*	color:	#093D72;*/
+/*	color:	#004276;*/
+/*	color:	#174F82;*/
+/*	color:	#0C0CC0;*/
+/*	color:	#3a6eca;*/
+	text-decoration:none;
+}
+a:visited {color:#12C;}
+a:hover {color:#12C;text-decoration:underline;}
+
+
+/*	
+	tables
+*/
+table caption {
+	text-align:left;
+	font-weight:bold;
+	margin: 0;
+	font-size: 1.4285714285714286em;
+	line-height: 1.05em;
+	margin-bottom: 1.05em;
+}
+thead {
+	margin: 0;
+	font-size: 0.8571428571428571em;
+	line-height: 1.75em;
+	margin-bottom: 1.75em;	
+	background:#444;
+	border-bottom:1px dotted #444;
+}
+th, th a, th a:visited {
+	font-weight:bold;
+	color:	#fff;
+	text-decoration:none;	
+	padding: .2em 1em;
+}
+th a:hover {
+	font-weight:bold;
+	color:	#fff;
+	text-decoration:underline;	
+	padding: .2em 1em;
+}
+
+td {
+	padding:.25em 1em;
+	border-top:1px dotted #333;
+	border-bottom:1px dotted #333;
+}
+tbody tr:hover {
+
+	background:#ffc;
+/*	background:#FFF5D6;*/
+/*	background:#f1fff7;*/
+/*	background:#C2C2C2;*/
+/*	background:#CFCEC4;*/
+/*	background:#F5F5F5;*/
+}
+table.center {
+    margin-left:auto; 
+    margin-right:auto;
+}
+
+/* 
+   Autocomplete
+*/
+.ac_results {
+	padding: 0px;
+	border: 1px solid gray;
+	background-color: white;
+	overflow: hidden;
+}
+.ac_results ul {
+	width: 100%;
+	list-style-position: outside;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.ac_results iframe {
+	display:none;/*sorry for IE5*/
+	display/**/:block;/*sorry for IE5*/
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:-1;
+	filter:mask();
+	width:3000px;
+	height:3000px;
+}
+.ac_results li {
+	margin: 0px;
+	padding: 2px 5px;
+	cursor: pointer;
+	display: block;
+	width: 100%;
+	font-family: 'Helvetica Neue', Arial, 'Liberation Sans', FreeSans, sans-serif;
+	font-size: 1em;
+	color: #333;
+	overflow: hidden;
+    text-align:left;
+}
+.ac_loading {
+	background : white url('/images/spinner.gif') right center no-repeat;
+}
+.ac_over {
+	background-color: gray;
+	color: black;
+}
+
+/* 
+   Forms
+*/
+.form_heading {
+  float: left;
+  width: 200px;
+  text-align: right;
+  margin-right:10px;
+}
+form div.row {
+	clear:both;
+	margin-bottom: 1em;
+}
+.field_error input {
+	border: 1px solid #c20c0c;
+
+/*	background-color:#fde1e1;*/
+}
+
+.error_message {
+	color:#c20c0c;
+	margin-left: 193px;
+}
+
+form label {
+  float: left;
+  width: 180px;
+  text-align: right;
+  margin: 0px 10px 0px 0px;
+/*  font-weight: bold;*/
+}
+
+form label.radio {
+  float: none;
+  text-align: left;
+  margin: 0px 2px;
+  font-weight: normal;
+}
+
+.check label {
+  float: none;
+  text-align: left;
+  margin: 0px 2px;
+  font-weight: normal;	
+}
+
+form div.radio {
+	display: inline-block;
+}
+
+form div.check {
+	display: inline-block;
+}
+
+form div.line_items {
+	display: inline-block;
+}
+
+form .fields {
+	margin-bottom: 1em;
+}
+
+
+form input[type='submit'] {
+	display: inline-block;
+	margin-left: 193px;
+}
+.hint {
+	margin-left: 193px;
+}
+
+.inactive {
+    background-color: #EEE;
+    color: #999;
+}
+
+label.radio {
+  float: none;
+  text-align: left;
+  margin: 0px 2px;
+  font-weight: normal;
+}
+
+
+
+
+

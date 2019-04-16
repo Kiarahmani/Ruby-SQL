@@ -1,0 +1,146 @@
+}
+class User {
+}
+class Specification {
+  0..1 Category category
+  0..1 Project project
+  0..1 User contractor
+  0..1 User controller
+  0+ SpecificationLog specification_logs inverseof specification
+}
+class Category {
+}
+class Project {
+}
+class SpecificationLog {
+  0..1 Specification specification
+  0..1 Category category
+  0..1 Project project
+  0..1 User contractor
+  0..1 User controller
+}
+
+action CategoriesController__create() {
+  create(Category)
+}
+action CategoriesController__destroy() {
+  at__category = empty
+  at__category = oneof(allof(Category))
+  delete at__category
+}
+action CategoriesController__edit() {
+}
+action CategoriesController__index() {
+}
+action CategoriesController__new() {
+  create(Category)
+}
+action CategoriesController__show() {
+}
+action CategoriesController__update() {
+}
+action Devise::PasswordsController__create() {
+}
+action Devise::PasswordsController__edit() {
+}
+action Devise::PasswordsController__new() {
+}
+action Devise::PasswordsController__update() {
+}
+action Devise::RegistrationsController__cancel() {
+}
+action Devise::RegistrationsController__create() {
+}
+action Devise::RegistrationsController__destroy() {
+}
+action Devise::RegistrationsController__edit() {
+}
+action Devise::RegistrationsController__new() {
+}
+action Devise::RegistrationsController__update() {
+}
+action Devise::SessionsController__create() {
+}
+action Devise::SessionsController__destroy() {
+}
+action Devise::SessionsController__new() {
+}
+action ProjectsController__create() {
+  create(Project)
+}
+action ProjectsController__destroy() {
+  at__project = empty
+  at__project = oneof(allof(Project))
+  delete at__project
+}
+action ProjectsController__edit() {
+}
+action ProjectsController__index() {
+}
+action ProjectsController__new() {
+  create(Project)
+}
+action ProjectsController__show() {
+}
+action ProjectsController__update() {
+}
+action SpecificationsController__create() {
+  at__specification = empty
+  at__specification = create(Specification)
+  at__specification.contractor = oneof(allof(User))
+}
+action SpecificationsController__destroy() {
+  at__specification = empty
+  at__specification = empty
+  at__specification = empty
+  at__specification = empty
+  at__specification = oneof(allof(Specification))
+  either {
+    at__specification.controller = oneof(allof(User))
+  } or {
+  }
+  either {
+    at__specification.contractor = oneof(allof(User))
+  } or {
+  }
+  either {
+    at__specification.contractor = oneof(allof(User))
+  } or {
+  }
+  either {
+    at__specification.controller = oneof(allof(User))
+  } or {
+  }
+}
+action SpecificationsController__edit() {
+}
+action SpecificationsController__fsm() {
+}
+action SpecificationsController__index() {
+}
+action SpecificationsController__new() {
+  create(Specification)
+}
+action SpecificationsController__show() {
+}
+action SpecificationsController__update() {
+  at__specification = empty
+  at__specification = empty
+  at__specification = oneof(allof(Specification))
+  either {
+    at__specification.contractor = oneof(allof(User))
+  } or {
+  }
+  either {
+    at__specification.controller = oneof(allof(User))
+  } or {
+  }
+}
+action UploadController__handle() {
+}
+action UploadController__index() {
+}
+action UploadController__upload_file() {
+}
+action UsersController__show() {
+}

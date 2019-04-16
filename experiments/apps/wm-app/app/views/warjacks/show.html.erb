@@ -1,0 +1,6 @@
+<%= render :partial => 'models/profile', :locals => { :model => @model } %>
+
+<br />
+
+<%= link_to('Edit', edit_warjack_path(@model)) + ' |' if can? :update, @model %>
+<%= show_links @model.faction %>

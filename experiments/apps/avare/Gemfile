@@ -1,0 +1,16 @@
+source 'http://rubygems.org'
+
+gem 'rails', '3.2' #'3.0.9'
+gem 'sqlite3'
+gem 'jquery-rails'
+gem 'devise'
+gem 'cancan'
+gem 'state_machine'
+gem 'simple-navigation'
+gem 'meta_search'
+gem 'formtastic', '2.0.0.rc1'
+gem 'spreadsheet'
+gem 'russian'
+gem 'mysql2', '~> 0.3.0'
+
+gem 'adsl'

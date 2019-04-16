@@ -1,0 +1,81 @@
+<nav class="sub-header-nav-bar">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6 col-xs-3">
+        <h3>Meals</h3>
+      </div>
+      <div class="col-sm-6 col-xs-9">
+        <ul class="state-switcher">
+          <li><%= link_to 'Add Meal', new_meal_path %></li>
+          <li class="active"><a href="#">Summary</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <%= render 'cards' %>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12 col-lg-10 col-lg-offset-1">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Calories</th>
+              <th>Carbs</th>
+              <th>Fat</th>
+              <th>Protein</th>
+              <th class="hidden-xs">Carbs (%)</th>
+              <th class="hidden-xs">Fat (%)</th>
+              <th class="hidden-xs">Protein (%)</th>
+              <th class="hidden-xs">API</th>
+              <th class="hidden-xs"></th>
+              <th class="hidden-xs"></th>
+            </tr>
+          </thead>
+
+          <% @meals_grouped_by_date.keys.each do |key| %>
+            <tr>
+              <td><strong><%= key.to_formatted_s(:short) %></strong></td>
+              <td><strong><%= @meals_grouped_by_date[key].sum(&:calories).round(1) %></strong></td>
+              <td><strong><%= @meals_grouped_by_date[key].sum(&:carbohydrates).round(1) %></strong></td>
+              <td><strong><%= @meals_grouped_by_date[key].sum(&:fat).round(1) %></strong></td>
+              <td><strong><%= @meals_grouped_by_date[key].sum(&:protein).round(1) %></strong></td>
+              <td class="hidden-xs"><strong><%= macro_percent_for_meals(@meals_grouped_by_date[key], :carbohydrates).round(1) %></strong></td>
+              <td class="hidden-xs"><strong><%= macro_percent_for_meals(@meals_grouped_by_date[key], :fat).round(1) %></strong></td>
+              <td class="hidden-xs"><strong><%= macro_percent_for_meals(@meals_grouped_by_date[key], :protein).round(1) %></strong></td>
+              <td class="hidden-xs"></td>
+              <td class="hidden-xs"></td>
+              <td class="hidden-xs"></td>
+            </tr>
+
+            <% @meals_grouped_by_date[key].each do |meal| %>
+              <tr>
+                <td></td>
+                <td><%= meal.calories %></td>
+                <td><%= meal.carbohydrates %></td>
+                <td><%= meal.fat %></td>
+                <td><%= meal.protein %></td>
+                <td class="hidden-xs"><%= meal.carbohydrates_percentage %></td>
+                <td class="hidden-xs"><%= meal.fat_percentage %></td>
+                <td class="hidden-xs"><%= meal.protein_percentage %></td>
+                <td class="hidden-xs"><%= link_to 'JSON', meal_path(meal, format: :json) %></td>
+                <td class="hidden-xs"><%= link_to 'Edit', edit_meal_path(meal) %></td>
+                <td class="hidden-xs"><%= link_to 'Destroy', meal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </table>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  window.mealCalories = [<% (@meals_grouped_by_date.keys || []).each do |key| %>
+    [<%= Time.parse(key.to_s).to_i * 1000 %>, <%= @meals_grouped_by_date[key].sum(&:calories).round(1) %>],
+  <% end %>];
+</script>

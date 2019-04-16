@@ -1,0 +1,45 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  entity: MyString
+  unit: MyString
+  quantity: 1.5
+  price_without_vat: 1.5
+  price_with_vat: 1.5
+  coast_of_delivery: 1.5
+  amount_with_vat: 1.5
+  supplier_id: 1
+  project_id: 1
+  notice: MyString
+  recommended_conditions: MyString
+  recommended_supplier: MyString
+  recommended_notice: MyString
+  contractor_id: 1
+  controller_id: 1
+  open_on: 2011-07-29
+  close_on: 2011-07-29
+  search_time: 1
+  wait_time: 1
+  check_time: 1
+
+two:
+  entity: MyString
+  unit: MyString
+  quantity: 1.5
+  price_without_vat: 1.5
+  price_with_vat: 1.5
+  coast_of_delivery: 1.5
+  amount_with_vat: 1.5
+  supplier_id: 1
+  project_id: 1
+  notice: MyString
+  recommended_conditions: MyString
+  recommended_supplier: MyString
+  recommended_notice: MyString
+  contractor_id: 1
+  controller_id: 1
+  open_on: 2011-07-29
+  close_on: 2011-07-29
+  search_time: 1
+  wait_time: 1
+  check_time: 1

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title><%= content_for?(:title) ? yield(:title) : "Quantify" %></title>
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Quantify" %>">
+    <%= stylesheet_link_tag "application", media: "all" %>
+    <%= csrf_meta_tags %>
+    <%= javascript_include_tag "application" %>
+    <%= yield(:head) %>
+  </head>
+  <body class="<%= controller_name %> <%= action_name %> <% if current_user %>authenticated<% end %>">
+    <header>
+      <%= render 'layouts/navigation' %>
+      <%= render 'layouts/messages' %>
+    </header>
+    <div id="main" role="main">
+      <%= yield %>
+    </div>
+    <footer>
+      <%= render 'layouts/footer' %>
+    </footer>
+  </body>
+</html>

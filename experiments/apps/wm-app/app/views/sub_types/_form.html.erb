@@ -1,0 +1,11 @@
+<%= form_for @sub_type do |f| %>
+	<%= display_errors @sub_type %>
+
+	<div class="field">
+		<%= f.label :name %><br />
+		<%= f.text_field :name %>
+	</div>
+	<div class="actions">
+		<%= f.submit %>
+	</div>
+<% end %>

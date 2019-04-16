@@ -1,0 +1,18 @@
+<div class="threecol">
+  <h3>Variants</h3>
+  <p>Configure the variant options for selling this product.</p>
+  <%= link_to 'Variant options', new_admin_product_skus_variant_path(@product), remote: true, :class => 'btn btn-blue btn-normal', id: 'sku-variant-options-button' %>
+  <%= link_to 'Add variant', new_admin_product_sku_path(@product), remote: true, :class => @product.skus.empty? ? "btn btn-green btn-normal hide" : "btn btn-green btn-normal", id: 'add-sku-button' %>
+</div>
+<div class="ninecol last">
+    <fieldset class="widget widget-content" id="skus">
+        <% if @skus.empty? %>
+          <div class="helper-notification">
+            <p>You do not have any variants for this product.</p>
+            <i class="icon-tags"></i>
+          </div>
+        <% else %>
+            <%= render partial: 'admin/products/skus/table', format: [:html] %>
+        <% end %>
+    </fieldset>
+</div>

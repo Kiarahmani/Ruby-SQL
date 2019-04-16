@@ -1,0 +1,32 @@
+class Role {
+  0+ User users inverseof roles
+}
+authenticable class User {
+  0+ Role roles
+}
+
+usergroup admin
+
+permit admin create, delete, read Role
+permit admin create, delete, read User
+
+action UsersController__destroy {
+  assert inusergroup(admin)
+  user = oneof(User)
+  if (not equal(user, currentuser)) {
+    delete(user)
+    empty
+  }
+}
+action UsersController__index {
+  assert inusergroup(admin)
+  at__users = User
+}
+action UsersController__show {
+  at__user = oneof(User)
+}
+action UsersController__update {
+  assert inusergroup(admin)
+  at__user = oneof(User)
+}
+

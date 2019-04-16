@@ -1,0 +1,12 @@
+form
+  .field_with_errors
+    @extend .has-error
+
+  small.error
+    @include border-radius(0px 0px $border-radius $border-radius)
+
+  .button
+    // margin: $button-margin-bottom 0 0
+
+@include input-size('.input-xl', $input-height-large + 12, $padding-large-vertical + 6, $padding-large-horizontal + 6, $font-size-large, $line-height-large, $border-radius-large + 1)
+

@@ -1,0 +1,46 @@
+@import url(yaml/core/base.css);
+@import url(yaml/navigation/nav_shinybuttons.css);
+@import url(yaml/screen/forms.css);
+@import url(yaml/navigation/nav_vlist.css);
+@import url(screen/basemod.css);
+@import url(screen/basemod_2col_left_13.css);
+@import url(screen/content.css);
+@import url(yaml/print/print_003_draft.css);
+
+/*
+
+ul.hmenu {
+  list-style: none;	
+  margin: 0 0 2em;
+  padding: 0;
+}
+ul.hmenu li {
+  display: inline;  
+}
+*/
+#flash_notice, #flash_alert {
+  padding: 5px 8px;
+  margin: 10px 0;
+}
+#flash_notice {
+  background-color: #CFC;
+  border: solid 1px #6C6;
+}
+#flash_alert {
+  background-color: #FCC;
+  border: solid 1px #C66;
+}
+
+tbody tr:hover th[scope="row"],
+tbody tr:hover tbody th.sub { background:#A8B1B8; }
+tbody tr:hover td { background:#A8B1B8; }
+
+tbody tr.studying { background:#FFFFFF; }
+tbody tr.approving { background:#CDEB8B; }
+tbody tr.archived { background:#FFFF88; }
+tbody tr.deleted { background:#A0A0A0 }
+tbody tr.deleted_by_contractor { background:#CC3333; }
+tbody tr.deleted_by_controller { background:#CC3333; }
+
+input:disabled { color: black;)
+select[disabled] { color: black;)

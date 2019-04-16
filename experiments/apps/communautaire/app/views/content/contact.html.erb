@@ -1,0 +1,12 @@
+<div id="center_it">
+<h1>Nouvelle demande de contact</h1>
+<% semantic_form_for :email, :url => { :controller => 'content', :action => 'send_mail' } do |f| %>
+     <% f.inputs do %>
+          <%= f.input :nom %>
+        <%= f.input :email %>
+        <%= f.input :sujet %>
+        <%= f.input :message, :as => :text %>
+      <% end %>
+    <%= submit_tag "Envoyer"%>
+<% end %>
+</div>

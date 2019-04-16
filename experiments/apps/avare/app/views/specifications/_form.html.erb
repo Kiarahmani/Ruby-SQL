@@ -1,0 +1,93 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "specification_form.js" %>
+<% end %>
+
+<%= form_for @specification, :html => {:class => "yform full"} do |f| %>
+  <% if @specification.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@specification.errors.count, "error") %> prohibited this specification from being saved:</h2>
+      <ul>
+      <% @specification.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <fieldset class="disabled">
+    <legend>Запрос</legend>
+    <div class="subcolumns">
+      <div class="c50l">
+        <div class="subcl type-select">
+          <%= f.label :project_id, "Проект" %>
+          <%= f.collection_select :project_id, Project.all, :id, :name, :include_blank => false %>
+        </div>
+        <div class="subcr type-select">
+          <%= f.label :category_id, "Категория" %>
+          <%= f.collection_select :category_id, Category.all, :id, :name, :include_blank => false %>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :entity, "Номенклатура" %>
+          <%= f.text_field :entity %>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :unit, "Ед.изм." %>
+          <%= f.text_field :unit %>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :supplier, "Поставщик" %>
+          <%= f.text_field :supplier %>
+        </div>
+      </div>
+      <div class="c50r">
+	      <div class="subcr type-text">
+          <%= f.label :quantity, "Количество" %>
+          <%= f.text_field :quantity %>
+        </div>
+        <div class="subcr type-text">
+          <%= f.label :price_with_vat, "Цена" %>
+          <%= f.text_field :price_with_vat %>
+        </div>
+        <div class="subcr type-text">
+          <%= f.label :coast_of_delivery, "Доставка" %>
+          <%= f.text_field :coast_of_delivery %>
+        </div>
+        <div class="subcr type-select">
+          <%= f.label :contractor_id, "Менеджер" %>
+          <%= f.collection_select :contractor_id, User.all, :id, :name, :include_blank => false %>
+        </div>
+        <div class="subcr type-text">
+          <%= f.label :notice, "Примечание" %>
+          <%= f.text_field :notice %>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Ответ</legend>
+    <div class="subcolumns">
+      <div class="c50l">
+        <div class="subcl type-text">
+          <%= f.label :recommended_conditions %>
+          <%= f.text_field :recommended_conditions%>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :recommended_notice %>
+          <%= f.text_field :recommended_notice %>
+        </div>
+      </div>
+      <div class="c50r">
+        <div class="subcl type-text">
+          <%= f.label :recommended_supplier %>
+          <%= f.text_field :recommended_supplier %>
+        </div>
+        <div class="subcr type-select">
+          <%= f.label :controller_id %>
+          <%= f.collection_select :controller_id, User.all, :id, :name, :include_blank => false %>
+        </div>
+      </div>
+
+  </fieldset>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

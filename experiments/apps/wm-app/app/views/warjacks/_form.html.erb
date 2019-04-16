@@ -1,0 +1,22 @@
+<div class="field">
+	<%= f.label :model_type %><br />
+	<%= f.collection_select :model_type_id, ModelType.find(2, 3), :id, :name %>
+</div>
+
+<%= f.fields_for :warjack do |form| %>
+	<div class="field">
+		<%= form.label :damage_grid %><br />
+		<%= form.collection_select :damage_grid_id, DamageGrid.order(:name), :id, :name, :prompt => true %>
+	</div>
+	<div id="grid_example"></div>
+
+	<div class="field">
+    <%= form.label :fury %><br />
+    <%= form.text_field :fury, :size => 2, :maxlength => 2 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :threshold %><br />
+    <%= form.text_field :threshold, :size => 2, :maxlength => 2 %>
+  </div>
+<% end %>

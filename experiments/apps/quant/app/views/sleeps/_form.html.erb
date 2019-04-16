@@ -1,0 +1,22 @@
+<%= form_for @sleep, html: { role: "form", class: "transparent-form" } do |f| %>
+  
+  <%= content_tag :div, class: [("has-error" if @sleep.errors[:start].present?), "form-group"] do %>
+    <% if @sleep.errors[:start].present? %>
+      <%= f.label :start, class: "control-label" do %>Start time <%= @sleep.errors[:start].join(", ") %><% end %>
+    <% else %>
+      <%= f.label :start, class: "hidden" %>
+    <% end %>
+    <%= datetime_local_field("sleep", "start", :discard_year => true, placeholder: "yyyy-mm-dd", class: "form-control input-xl text-center") %>
+  <% end %>
+  
+  <%= content_tag :div, class: [("has-error" if @sleep.errors[:end].present?), "form-group"] do %>
+    <% if @sleep.errors[:end].present? %>
+      <%= f.label :end, class: "control-label" do %>End time <%= @sleep.errors[:end].join(", ") %><% end %>
+    <% else %>
+      <%= f.label :end, class: "hidden" %>
+    <% end %>
+    <%= datetime_local_field("sleep", "end", :discard_year => true, placeholder: "yyyy-mm-dd", class: "form-control input-xl text-center") %>
+  <% end %>
+  
+  <%= f.submit class: "btn btn-default btn-block btn-xl"%>
+<% end %>

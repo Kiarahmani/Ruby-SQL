@@ -1,0 +1,157 @@
+class Category {
+}
+class Project {
+}
+class Specification {
+  0..1 Category category
+  0..1 Project project
+  0..1 User contractor
+  0..1 User controller
+  0+ SpecificationLog specification_logs inverseof specification
+}
+class SpecificationLog {
+  0..1 Specification specification
+  0..1 Category category
+  0..1 Project project
+  0..1 User contractor
+  0..1 User controller
+}
+class Upload {
+  0..1 User contractor
+}
+authenticable class User {
+}
+
+usergroup admin
+usergroup reader
+usergroup contractor
+usergroup controller
+usergroup chief_contractor
+usergroup chief_controller
+
+permit admin create, delete, read Specification
+permit admin create, delete, read SpecificationLog
+permit admin create, delete, read User
+permit admin, contractor create, delete, read Upload
+permit admin, controller create, delete, read Category
+permit admin, controller create, delete, read Project
+permit reader read Category
+permit reader read Project
+permit reader read Specification
+permit reader read SpecificationLog
+permit reader read Upload
+permit reader read User
+
+action CategoriesController__create {
+  at__category = create Category
+}
+action CategoriesController__destroy {
+  at__category = oneof(Category)
+  delete(at__category)
+}
+action CategoriesController__edit {
+  at__category = oneof(Category)
+}
+action CategoriesController__index {
+  at__categories = Category
+}
+action CategoriesController__new {
+  at__category = create Category
+}
+action CategoriesController__show {
+  at__category = oneof(Category)
+}
+action CategoriesController__update {
+  at__category = oneof(Category)
+}
+action ProjectsController__create {
+  at__project = create Project
+}
+action ProjectsController__destroy {
+  at__project = oneof(Project)
+  delete(at__project)
+}
+action ProjectsController__edit {
+  at__project = oneof(Project)
+}
+action ProjectsController__index {
+  at__projects = Project
+}
+action ProjectsController__new {
+  at__project = create Project
+}
+action ProjectsController__show {
+  at__project = oneof(Project)
+}
+action ProjectsController__update {
+  at__project = oneof(Project)
+}
+action SpecificationsController__create {
+  at__specification = create Specification
+  at__specification.contractor = currentuser
+}
+action SpecificationsController__destroy {
+  at__specification = oneof(Specification)
+  if (((inusergroup(admin) or inusergroup(chief_contractor)) or inusergroup(chief_controller))) {
+    at__specification.controller = currentuser
+  }
+  if (((inusergroup(admin) or inusergroup(chief_contractor)) or inusergroup(chief_controller))) {
+    at__specification.contractor = currentuser
+  }
+  if (((inusergroup(admin) or inusergroup(chief_contractor)) or inusergroup(chief_controller))) {
+    at__specification.contractor = currentuser
+  }
+  if (((inusergroup(admin) or inusergroup(chief_contractor)) or inusergroup(chief_controller))) {
+    at__specification.controller = currentuser
+  }
+}
+action SpecificationsController__edit {
+  at__specification = oneof(Specification)
+}
+action SpecificationsController__fsm {}
+action SpecificationsController__index {
+  at__search = subset(Specification)
+  at__specifications = at__search
+  at__total_sum_without_delivery = empty
+  at__total_sum_with_delivery = empty
+  at__total_quantity = empty
+  foreach spec: at__specifications {
+    at__total_sum_without_delivery = empty
+    at__total_sum_with_delivery = empty
+    at__total_quantity = empty
+  }
+}
+action SpecificationsController__new {
+  at__specification = create Specification
+}
+action SpecificationsController__show {
+  at__specification = oneof(Specification)
+}
+action SpecificationsController__update {
+  at__specification = oneof(Specification)
+  if (*) {
+    at__specification.contractor = currentuser
+  }
+  if (*) {
+    at__specification.controller = currentuser
+  }
+}
+action UploadController__handle {
+  assert ((inusergroup(admin) or inusergroup(reader)) or inusergroup(contractor))
+}
+action UploadController__index {
+  assert ((inusergroup(admin) or inusergroup(reader)) or inusergroup(contractor))
+  at__search = subset(Upload)
+  at__uploads = at__search
+}
+action UploadController__upload_file {
+  assert ((inusergroup(admin) or inusergroup(reader)) or inusergroup(contractor))
+}
+action UsersController__show {
+  at__user = oneof(User)
+}
+
+invariant specificationsHaveCategories: forall(Specification s: not isempty(s.category))
+invariant specificationsHaveProjects: forall(Specification s: not isempty(s.project))
+invariant specificationsHaveContractor: forall(Specification s: not isempty(s.contractor))
+

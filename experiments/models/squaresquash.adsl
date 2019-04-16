@@ -1,0 +1,423 @@
+class Blame {
+}
+class Bug {
+  0..1 Environment environment
+  0..1 User assigned_user
+  0..1 Deploy deploy
+  0..1 Bug duplicate_of
+  0+ Bug duplicate_bugs inverseof duplicate_of
+  0+ Occurrence occurrences inverseof bug
+  0+ Comment comments inverseof bug
+  0+ Event events inverseof bug
+  0+ Watch watches inverseof bug
+  0+ NotificationThreshold notification_thresholds inverseof bug
+  0+ DeviceBug device_bugs inverseof bug
+}
+class Comment {
+  0..1 User user
+  0..1 Bug bug
+}
+class Deploy {
+  0..1 Environment environment
+  0+ Bug bugs inverseof deploy
+  0..1 ObfuscationMap obfuscation_map inverseof deploy
+}
+class DeviceBug {
+  0..1 Bug bug
+}
+class Email {
+  0..1 User user
+  0..1 Project project
+}
+class Environment {
+  0..1 Project project
+  0..1 Project default_project inverseof default_environment
+  0+ Deploy deploys inverseof environment
+  0+ Bug bugs inverseof environment
+  0+ SourceMap source_maps inverseof environment
+}
+class Event {
+  0..1 Bug bug
+  0..1 User user
+  0+ UserEvent user_events inverseof event
+}
+class Membership {
+  0..1 User user
+  0..1 Project project
+}
+class NotificationThreshold {
+  0..1 User user
+  0..1 Bug bug
+}
+class ObfuscationMap {
+  0..1 Deploy deploy
+}
+class Occurrence {
+  0..1 Bug bug
+  0..1 Symbolication symbolication
+  0..1 Occurrence redirect_target
+  0..1 Occurrence redirected_occurrence inverseof redirect_target
+}
+class Project {
+  0..1 User owner
+  0..1 Environment default_environment
+  0+ Environment environments inverseof project
+  0+ Membership memberships inverseof project
+  0+ Email emails inverseof project
+}
+class Slug {
+}
+class SourceMap {
+  0..1 Environment environment
+}
+class Symbolication {
+  0+ Occurrence occurrences inverseof symbolication
+}
+authenticable class User {
+  0+ Bug assigned_bugs inverseof assigned_user
+  0+ Comment comments inverseof user
+  0+ Event events inverseof user
+  0+ Membership memberships inverseof user
+  0+ Project owned_projects inverseof owner
+  0+ Watch watches inverseof user
+  0+ UserEvent user_events inverseof user
+  0+ Email emails inverseof user
+  0+ NotificationThreshold notification_thresholds inverseof user
+}
+class UserEvent {
+  0..1 User user
+  0..1 Event event
+}
+class Watch {
+  0..1 User user
+  0..1 Bug bug
+}
+
+action Account_MembershipsController__index {
+  at__memberships = subset(currentuser.memberships)
+  if (*) {
+    at__memberships = subset(at__memberships)
+  }
+}
+action AccountsController__show {}
+action AccountsController__update {}
+action BugsController__destroy {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  delete(at__bug.occurrences)
+  delete(at__bug.comments)
+  delete(at__bug.events)
+  delete(at__bug.watches)
+  delete(at__bug.notification_thresholds)
+  delete(at__bug.device_bugs)
+  delete(at__bug)
+}
+action BugsController__index {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+}
+action BugsController__notify_deploy {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+}
+action BugsController__notify_occurrence {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+}
+action BugsController__show {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  at__aggregation_dimensions = empty
+}
+action BugsController__update {
+  at__notification_threshold = empty
+  at__comment = empty
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  if (*) {
+    original_bug = tryoneof(at__environment.bugs)
+    if (not isempty(original_bug)) {
+      at__bug.duplicate_of = original_bug
+    } else {
+      true
+    }
+  } else {
+    at__bug.duplicate_of = empty
+  }
+  if (*) {
+    if (*) {
+      at__comment = create((at__bug).comments)
+      at__comment.user = currentuser
+      true
+    }
+    if (*) {
+      if (*) {
+        delete(subset(currentuser.notification_thresholds))
+      } else {
+        at__notification_threshold = {
+          longanduniqvarname = subset(currentuser.notification_thresholds)
+          if (isempty(longanduniqvarname)) {
+            create NotificationThreshold
+          } else {
+            oneof(longanduniqvarname)
+          }
+        }
+      }
+    }
+  }
+}
+action BugsController__watch {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  if (not isempty(watch = tryoneof(currentuser.watches))) {
+    delete(watch)
+  } else {
+    watch = {
+      longanduniqvarname = subset(currentuser.watches)
+      if (isempty(longanduniqvarname)) {
+        create Watch
+      } else {
+        oneof(longanduniqvarname)
+      }
+    }
+  }
+}
+action CommentsController__create {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  at__comment = create((at__bug).comments)
+  at__comment.user = currentuser
+}
+action CommentsController__destroy {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  at__comment = oneof(at__bug.comments)
+  delete(at__comment)
+}
+action CommentsController__index {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  at__comments = subset(at__bug.comments)
+  last = if (*) {
+    oneof(at__bug.comments)
+  }
+  if (not isempty(last)) {
+    at__comments = subset(at__comments)
+  }
+}
+action CommentsController__update {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  at__comment = oneof(at__bug.comments)
+}
+action EmailsController__create {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+  at__email = create((currentuser).emails)
+  at__email.project = at__project
+}
+action EmailsController__destroy {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+  at__email = oneof(currentuser.emails)
+  delete(at__email)
+}
+action EmailsController__index {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+  at__emails = subset(currentuser.emails)
+  if (*) {
+    at__emails = subset(at__emails)
+  }
+}
+action EnvironmentsController__update {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+}
+action EventsController__index {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  at__events = subset(at__bug.events)
+  last = if (*) {
+    oneof(at__bug.events)
+  }
+  if (not isempty(last)) {
+    at__events = subset(at__events)
+  }
+}
+action NotificationThresholdsController__create {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  at__notification_threshold = {
+    longanduniqvarname = subset(currentuser.notification_thresholds)
+    if (isempty(longanduniqvarname)) {
+      create NotificationThreshold
+    } else {
+      oneof(longanduniqvarname)
+    }
+  }
+}
+action NotificationThresholdsController__destroy {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  delete(subset(currentuser.notification_thresholds))
+}
+action NotificationThresholdsController__update {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  at__notification_threshold = {
+    longanduniqvarname = subset(currentuser.notification_thresholds)
+    if (isempty(longanduniqvarname)) {
+      create NotificationThreshold
+    } else {
+      oneof(longanduniqvarname)
+    }
+  }
+}
+action OccurrencesController__aggregate {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+}
+action OccurrencesController__histogram {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+}
+action OccurrencesController__index {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+}
+action OccurrencesController__show {
+  at__project = oneof(Project)
+  at__environment = oneof(at__project.environments)
+  at__bug = oneof(at__environment.bugs)
+  at__occurrence = oneof(at__bug.occurrences)
+}
+action Project_MembershipController__destroy {
+  at__project = oneof(Project)
+  at__membership = oneof(currentuser.memberships)
+  delete(at__membership)
+}
+action Project_MembershipController__edit {
+  at__project = oneof(Project)
+  at__membership = oneof(currentuser.memberships)
+}
+action Project_MembershipController__join {
+  at__project = oneof(Project)
+  at__membership = {
+    longanduniqvarname = subset(at__project.memberships)
+    if (isempty(longanduniqvarname)) {
+      create Membership
+    } else {
+      oneof(longanduniqvarname)
+    }
+  }
+}
+action Project_MembershipController__update {
+  at__project = oneof(Project)
+  at__membership = oneof(currentuser.memberships)
+}
+action Project_MembershipsController__create {
+  at__project = oneof(Project)
+  at__membership = create((at__project).memberships)
+}
+action Project_MembershipsController__destroy {
+  at__project = oneof(Project)
+  at__membership = oneof(at__project.memberships)
+  if (*) {
+    delete(at__membership)
+    true
+  }
+}
+action Project_MembershipsController__index {
+  at__project = oneof(Project)
+}
+action Project_MembershipsController__update {
+  at__project = oneof(Project)
+  at__membership = oneof(at__project.memberships)
+}
+action ProjectsController__create {
+  at__project = create((currentuser).owned_projects)
+}
+action ProjectsController__destroy {
+  at__project = oneof(Project)
+  delete(at__project.environments)
+  delete(at__project.memberships)
+  delete(at__project.emails)
+  delete(at__project)
+}
+action ProjectsController__edit {
+  at__project = oneof(Project)
+}
+action ProjectsController__index {}
+action ProjectsController__rekey {
+  at__project = oneof(Project)
+}
+action ProjectsController__show {
+  at__project = oneof(Project)
+}
+action ProjectsController__update {
+  at__project = oneof(Project)
+}
+action SearchController__search {}
+action SearchController__suggestions {}
+action UsersController__create {
+  raise
+}
+action UsersController__index {
+  at__users = empty
+  if (*) {
+    at__users = subset(User)
+    last = if (*) {
+      oneof(User)
+    }
+    if (not isempty(last)) {
+      at__users = subset(at__users)
+    }
+    empty
+  }
+}
+action UsersController__show {
+  at__user = oneof(User)
+}
+
+invariant commentsHaveBugs: forall(Comment c: not isempty(c.bug))
+invariant deploysHaveEnvironments: forall(Deploy d: not isempty(d.environment))
+invariant deviceBugsHaveBugs: forall(DeviceBug db: not isempty(db.bug))
+invariant emailsHaveUsers: forall(Email e: not isempty(e.user))
+invariant environmentsHaveProjects: forall(Environment e: not isempty(e.project))
+invariant eventsHaveBugs: forall(Event e: not isempty(e.bug))
+invariant membershipsHaveUsers: forall(Membership m: not isempty(m.user))
+invariant membershipsHaveProjects: forall(Membership m: not isempty(m.project))
+invariant notificationThresholdsHaveUsers: forall(NotificationThreshold nt: not isempty(nt.user))
+invariant notificationThresholdsHaveBugs: forall(NotificationThreshold nt: not isempty(nt.bug))
+invariant obfuscationMapsHaveDeploys: forall(ObfuscationMap om: not isempty(om.deploy))
+invariant occurrencesHaveBugs: forall(Occurrence o: not isempty(o.bug))
+invariant projectsHaveOwners: forall(Project p: not isempty(p.owner))
+invariant sourceMapsHaveEnvironments: forall(SourceMap sm: not isempty(sm.environment))
+invariant userEventsHaveUsers: forall(UserEvent ue: not isempty(ue.user))
+invariant userEventsHaveEvents: forall(UserEvent ue: not isempty(ue.event))
+invariant watchesHaveUsers: forall(Watch w: not isempty(w.user))
+invariant watchesHaveBugs: forall(Watch w: not isempty(w.bug))

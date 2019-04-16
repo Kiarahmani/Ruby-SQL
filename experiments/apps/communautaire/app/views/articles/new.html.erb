@@ -1,0 +1,16 @@
+<h1>Ajout d'article sur le site</h1>
+
+<%= semantic_form_for(@article) do |f| %>
+
+    <% f.inputs do %>
+        <%= f.input :title, :as => :string, :label => "Titre" %>
+        <%= f.input :content, :as => :text, :label => "Contenu" %>
+        <%= f.input :category, :as => :select, :collection => Category.all.collect { |c| [ c.name, c.id ] }, :label => "Catégorie" %>
+    <% end %>
+
+
+
+    <div class="actions">
+      <%= f.submit "Ajouter un Article" %>
+    </div>
+<% end %>

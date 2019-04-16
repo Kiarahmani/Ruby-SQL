@@ -1,0 +1,578 @@
+class Accessorisation {
+  0..1 Accessory accessory
+  0..1 Product product
+}
+class Accessory {
+  0+ CartItemAccessory cart_item_accessories inverseof accessory
+  0+ OrderItemAccessory order_item_accessories inverseof accessory
+  0+ Accessorisation accessorisations inverseof accessory
+}
+class Address {
+  0..1 Order order
+}
+class Attachment {
+}
+class Cart {
+  0+ CartItem cart_items inverseof cart
+  0..1 Order order inverseof cart
+  0..1 DeliveryServicePrice estimate_delivery
+}
+class CartItem {
+  0..1 CartItemAccessory cart_item_accessory inverseof cart_item
+  0..1 Cart cart
+  0..1 Sku sku
+}
+class CartItemAccessory {
+  0..1 CartItem cart_item
+  0..1 Accessory accessory
+}
+class Category {
+  0+ Product products inverseof category
+}
+class Country {
+  0+ Destination destinations inverseof country
+}
+class DeliveryService {
+  0+ DeliveryServicePrice prices inverseof delivery_service
+  0+ Destination destinations inverseof delivery_service
+}
+class DeliveryServicePrice {
+  0+ Order orders inverseof delivery
+  0..1 DeliveryService delivery_service
+}
+class Destination {
+  0..1 Country country
+  0..1 DeliveryService delivery_service
+}
+class Notification {
+}
+class Order {
+  0+ OrderItem order_items inverseof order
+  0+ Transaction transactions inverseof order
+  0..1 Cart cart
+  0..1 DeliveryServicePrice delivery
+  0..1 Address delivery_address inverseof order
+  0..1 Address billing_address inverseof order
+}
+class OrderItem {
+  0..1 OrderItemAccessory order_item_accessory inverseof order_item
+  0..1 Sku sku
+  0..1 Order order
+}
+class OrderItemAccessory {
+  0..1 OrderItem order_item
+  0..1 Accessory accessory
+}
+class Page {
+}
+class Permission {
+  0..1 User user
+  0..1 Role role
+}
+class Product {
+  0+ Sku skus inverseof product
+  0+ Tagging taggings inverseof product
+  0+ Accessorisation accessorisations inverseof product
+  0+ Product related
+  0..1 Category category
+}
+class RedactorRails_Asset {
+  0..1 User user
+}
+class RedactorRails_Document extends RedactorRails_Asset {
+}
+class RedactorRails_Picture extends RedactorRails_Asset {
+}
+class RelatedProduct {
+  0..1 Product product
+}
+class Role {
+  0+ Permission permissions inverseof role
+}
+class Sku {
+  0+ CartItem cart_items inverseof sku
+  0+ OrderItem order_items inverseof sku
+  0+ StockAdjustment stock_adjustments inverseof sku
+  0..1 Product product
+  0+ SkuVariant variants inverseof sku
+}
+class SkuVariant {
+  0..1 Sku sku
+  0..1 VariantType variant_type
+}
+class StockAdjustment {
+  0..1 Sku sku
+}
+class StoreSetting {
+}
+class Tag {
+  0+ Tagging taggings inverseof tag
+}
+class Tagging {
+  0..1 Product product
+  0..1 Tag tag
+}
+class Transaction {
+  0..1 Order order
+}
+authenticable class User {
+  0+ Permission permissions inverseof user
+}
+class VariantType {
+  0+ SkuVariant sku_variants inverseof variant_type
+}
+
+usergroup admin
+usergroup nonadmin
+
+rule (inusergroup(admin) xor inusergroup(nonadmin))
+
+permit admin create, delete, read Accessorisation
+permit admin create, delete, read Accessory
+permit admin create, delete, read Address
+permit admin create, delete, read Attachment
+permit admin create, delete, read CartItem
+permit admin create, delete, read CartItemAccessory
+permit admin create, delete, read Category
+permit admin create, delete, read Country
+permit admin create, delete, read DeliveryService
+permit admin create, delete, read DeliveryServicePrice
+permit admin create, delete, read Destination
+permit admin create, delete, read Notification
+permit admin create, delete, read Order
+permit admin create, delete, read OrderItem
+permit admin create, delete, read OrderItemAccessory
+permit admin create, delete, read Page
+permit admin create, delete, read Permission
+permit admin create, delete, read Product
+permit admin create, delete, read RedactorRails_Asset
+permit admin create, delete, read RedactorRails_Document
+permit admin create, delete, read RedactorRails_Picture
+permit admin create, delete, read RelatedProduct
+permit admin create, delete, read Role
+permit admin create, delete, read Sku
+permit admin create, delete, read SkuVariant
+permit admin create, delete, read StockAdjustment
+permit admin create, delete, read StoreSetting
+permit admin create, delete, read Tag
+permit admin create, delete, read Tagging
+permit admin create, delete, read Transaction
+permit admin create, delete, read VariantType
+permit admin, nonadmin create, delete, read Cart
+permit admin, nonadmin create, delete, read User
+permit nonadmin create, delete CartItem
+permit nonadmin read Category
+permit nonadmin read Product
+
+action AccessoriesController__update {}
+action Admin_AdminController__dashboard {}
+action Admin_AdminController__settings {}
+action Admin_AdminController__update {}
+action Admin_AttachmentsController__create {
+  at__product = oneof(Product)
+  at__attachment = empty
+}
+action Admin_AttachmentsController__destroy {
+  at__product = oneof(Product)
+  at__attachment = oneof(Attachment)
+  delete(at__attachment)
+}
+action Admin_AttachmentsController__edit {
+  at__product = oneof(Product)
+  at__attachment = oneof(Attachment)
+}
+action Admin_AttachmentsController__new {
+  at__product = oneof(Product)
+  at__attachment = empty
+}
+action Admin_AttachmentsController__show {
+  at__product = oneof(Product)
+  at__attachment = oneof(Attachment)
+}
+action Admin_AttachmentsController__update {
+  at__product = oneof(Product)
+  at__attachment = oneof(Attachment)
+}
+action Admin_DeliveryServicesController__copy_countries {
+  at__countries = Country
+  at__delivery_services = subset(DeliveryService)
+}
+action Admin_DeliveryServicesController__create {
+  at__countries = Country
+  at__delivery_service = create DeliveryService
+}
+action Admin_DeliveryServicesController__destroy {
+  at__result = empty
+  at__delivery_service = oneof(DeliveryService)
+  at__countries = Country
+  if (isempty(at__delivery_service.prices.orders)) {
+    at__result = if (*) {
+      delete(at__delivery_service.prices)
+      delete(at__delivery_service.destinations)
+      delete(at__delivery_service)
+      empty
+    }
+  } else {
+    false
+  }
+  if (*) {
+    at__result = empty
+  }
+}
+action Admin_DeliveryServicesController__edit {
+  at__delivery_service = oneof(DeliveryService)
+  at__countries = Country
+  at__form_delivery_service = oneof(DeliveryService)
+}
+action Admin_DeliveryServicesController__index {
+  at__countries = Country
+  at__delivery_services = subset(DeliveryService)
+}
+action Admin_DeliveryServicesController__new {
+  at__countries = Country
+  at__delivery_service = create DeliveryService
+}
+action Admin_DeliveryServicesController__set_countries {
+  at__countries = empty
+  at__delivery_service = empty
+  if (*) {
+    at__countries = Country
+    at__delivery_service = oneof(DeliveryService)
+    empty
+  }
+}
+action Admin_DeliveryServicesController__update {
+  at__form_delivery_service = empty
+  at__old_delivery_service = empty
+  at__delivery_service = oneof(DeliveryService)
+  at__countries = Country
+  if (not isempty(at__delivery_service.prices.orders)) {
+    at__old_delivery_service = at__delivery_service
+    at__delivery_service = create DeliveryService
+  }
+  if (*) {
+    at__form_delivery_service = at__old_delivery_service = if (isempty(at__old_delivery_service)) {
+      oneof(DeliveryService)
+    } else {
+      at__old_delivery_service
+    }
+    empty
+  }
+}
+action Admin_PagesController__edit {
+  at__page = subset(Page)
+  if (*) {
+    at__page = oneof(Page)
+  }
+  at__template_types = subset(Page)
+  if (*) {
+    at__template_types = empty
+  }
+}
+action Admin_PagesController__index {
+  at__pages = Page
+}
+action Admin_PagesController__update {
+  at__page = subset(Page)
+  if (*) {
+    at__page = oneof(Page)
+  }
+  at__template_types = subset(Page)
+  if (*) {
+    at__template_types = empty
+  }
+}
+action Admin_Products_StockController__index {
+  at__skus = subset(Sku)
+}
+action Admin_Products_StockController__show {
+  at__sku = oneof(Sku)
+  at__stock_adjustments = subset(at__sku.stock_adjustments)
+  at__stock_adjustment = create((at__sku).stock_adjustments)
+}
+action Admin_Products_TagsController__index {
+  at__tags = empty
+}
+action Admin_TransactionsController__paypal_ipn {}
+action Admin_UsersController__edit {
+  at__attachment = empty
+  at__user = oneof(User)
+  assert ((inusergroup(admin) and at__user in User) or (inusergroup(nonadmin) and at__user in User))
+  at__user = currentuser
+  if (*) {
+    at__attachment = create Attachment
+    at__attachment
+  }
+}
+action Admin_UsersController__update {
+  at__user = oneof(User)
+  assert ((inusergroup(admin) and at__user in User) or (inusergroup(nonadmin) and at__user in User))
+  at__user = currentuser
+}
+action CartItemsController__create {
+  at__final_delivery_service_prices = empty
+  at__sku = empty
+  if (*) {
+    at__sku = oneof(Sku)
+  } else {
+    at__cart_item = oneof(CartItem)
+    at__sku = at__cart_item.sku
+  }
+  at__quantity = empty
+  at__cart = oneof(Cart)
+  if (*) {
+    at__cart.estimate_delivery = empty
+    true
+  }
+  at__cart_item = {
+    current_item = tryoneof(oneof(Cart).cart_items)
+    if (*) {
+      if (*) {
+        current_item = create((oneof(Cart)).cart_items)
+      } else {
+        current_item = create((oneof(Cart)).cart_items)
+        create((current_item).cart_item_accessory)
+      }
+      empty
+    }
+    current_item
+  }
+  if (not isempty(oneof(Cart).cart_items)) {
+    at__final_delivery_service_prices = empty
+    empty
+  }
+}
+action CartItemsController__destroy {
+  at__final_delivery_service_prices = empty
+  at__cart = oneof(Cart)
+  if (*) {
+    at__cart.estimate_delivery = empty
+    true
+  }
+  at__cart_item = oneof(CartItem)
+  delete(at__cart_item.cart_item_accessory)
+  delete(at__cart_item)
+  if (not isempty(oneof(Cart).cart_items)) {
+    at__final_delivery_service_prices = empty
+    empty
+  }
+}
+action CartItemsController__update {
+  at__final_delivery_service_prices = empty
+  at__cart_item = empty
+  at__sku = empty
+  if (*) {
+    at__sku = oneof(Sku)
+  } else {
+    at__cart_item = oneof(CartItem)
+    at__sku = at__cart_item.sku
+  }
+  at__quantity = empty
+  at__cart = oneof(Cart)
+  if (*) {
+    at__cart.estimate_delivery = empty
+    true
+  }
+  at__accessory = if (not isempty(at__cart_item.cart_item_accessory)) {
+    at__cart_item.cart_item_accessory.accessory
+  }
+  if (*) {
+    delete(at__cart_item.cart_item_accessory)
+    delete(at__cart_item)
+  } else {
+    true
+  }
+  if (not isempty(oneof(Cart).cart_items)) {
+    at__final_delivery_service_prices = empty
+    empty
+  }
+}
+action CartsController__checkout {
+  at__delivery_id = empty
+  at__delivery_address = empty
+  at__billing_address = empty
+  at__delivery_service_prices = empty
+  at__order = if (*) {
+    create Order
+  } else {
+    oneof(Cart).order
+  }
+  at__cart_total = {
+    at__net_amount = empty
+    at__tax_amount = empty
+    at__gross_amount = empty
+    empty
+  }
+  at__country = empty
+  if (*) {
+    at__delivery_service_prices = subset(DeliveryServicePrice)
+  }
+  if (*) {
+    at__delivery_id = oneof(Cart).estimate_delivery
+    at__delivery_address = create((at__order).delivery_address)
+    at__billing_address = create((at__order).billing_address)
+  } else {
+    at__delivery_id = at__order.delivery
+  }
+}
+action CartsController__confirm {
+  at__order = empty
+  at__net_amount = empty
+  at__tax_amount = empty
+  at__gross_amount = empty
+  at__cart_total = empty
+  at__country = empty
+  at__delivery_service_prices = empty
+  if (*) {
+    at__order = if (*) {
+      create Order
+    } else {
+      oneof(Cart).order
+    }
+    at__cart_total = {
+      at__net_amount = empty
+      at__tax_amount = empty
+      at__gross_amount = empty
+      empty
+    }
+    at__country = empty
+    if (*) {
+      at__delivery_service_prices = subset(DeliveryServicePrice)
+    }
+    empty
+  }
+}
+action CartsController__estimate {
+  at__cart = oneof(Cart)
+}
+action CartsController__mycart {}
+action CartsController__purge_estimate {
+  at__cart = oneof(Cart)
+  at__cart.estimate_delivery = empty
+}
+action CategoriesController__show {
+  at__category = oneof(Category)
+}
+action DeliveryServicePricesController__update {
+  at__delivery_service_prices = subset(DeliveryServicePrice)
+  at__field_target = empty
+}
+action ErrorsController__show {}
+action NotificationsController__create {
+  at__sku = oneof(Sku)
+  at__notification = empty
+}
+action OrdersController__complete {
+  at__order = subset(Order)
+  if (*) {
+    at__order = oneof(Order)
+  }
+  delete(at__order.order_items.order_item_accessory)
+  delete(at__order.order_items)
+  foreach item: oneof(Cart).cart_items {
+    order_item = create((at__order).order_items)
+    if (*) {
+      create((order_item).order_item_accessory)
+    }
+    true
+  }
+}
+action OrdersController__confirm {
+  at__order = subset(Order)
+  if (*) {
+    at__order = oneof(Order)
+  }
+  at__delivery_address = at__order.delivery_address
+  at__billing_address = at__order.billing_address
+}
+action OrdersController__destroy {
+  at__order = subset(Order)
+  if (*) {
+    at__order = oneof(Order)
+  }
+  at__order.cart = empty
+}
+action OrdersController__failed {
+  at__order = oneof(Order)
+}
+action OrdersController__retry {
+  at__fatal_codes = empty
+  at__order = subset(Order)
+  if (*) {
+    at__order = oneof(Order)
+  }
+  at__error_code = empty
+  if (not {
+    at__fatal_codes = empty
+    if (*) {
+      true
+    } else {
+      false
+    }
+  }) {
+    at__order.cart = oneof(Cart)
+  }
+}
+action OrdersController__success {
+  at__order = oneof(Order)
+}
+action P_PagesController__send_contact_message {
+  at__contact_message = empty
+}
+action P_PagesController__show {
+  at__contact_message = empty
+  at__page = subset(Page)
+  if (*) {
+    at__page = oneof(Page)
+  }
+  if (*) {
+    at__contact_message = empty
+    empty
+  }
+}
+action ProductsController__show {
+  at__cart_item_accessory = empty
+  at__product = oneof(Product)
+  at__cart_item = create CartItem
+  if (not isempty(at__product.accessorisations.accessory)) {
+    at__cart_item_accessory = create((at__cart_item).cart_item_accessory)
+  }
+}
+action SearchController__autocomplete {
+  at__query = empty
+  at__json_products = empty
+}
+action SearchController__results {
+  at__query = empty
+  at__products = subset(Product)
+}
+action SkusController__notify {
+  at__sku = oneof(Sku)
+  at__notification = create Notification
+}
+action SkusController__update {}
+action StoreController__home {
+  at__new_products = subset(Product)
+  at__featured_products = subset(Product)
+}
+action Users_RegistrationsController__cancel {}
+action Users_RegistrationsController__create {}
+action Users_RegistrationsController__destroy {}
+action Users_RegistrationsController__edit {}
+action Users_RegistrationsController__new {}
+action Users_RegistrationsController__update {}
+action Users_SessionsController__create {}
+action Users_SessionsController__destroy {}
+action Users_SessionsController__new {}
+
+invariant cartItemsHaveCards: forall(CartItem ci: not isempty(ci.cart))
+invariant cartItemsHaveSkus: forall(CartItem ci: not isempty(ci.sku))
+invariant destinationsHaveCountries: forall(Destination d: not isempty(d.country))
+invariant destinationsHaveDeliveryServices: forall(Destination d: not isempty(d.delivery_service))
+invariant orderItemsHaveOrders: forall(OrderItem oi: not isempty(oi.order))
+invariant ordersHaveDeliveries: forall(Order o: not isempty(o.delivery))
+invariant stockAdjustmentsHaveSkus: forall(StockAdjustment sa: not isempty(sa.sku))
+invariant variantsHaveSkuVariants: forall(SkuVariant v: not isempty(v.sku))
+invariant transactionsHaveOrders: forall(Transaction t: not isempty(t.order))
+invariant permissionsHaveUsers: forall(Permission p: not isempty(p.user))
+

@@ -1,0 +1,170 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "jquery-ui.js", "specification_index.js" %>
+<% end %>
+
+<%= form_for @search, :url => specifications_path, :html => {:method => :get, :class => "yform full columnar"} do |f| %>
+  <fieldset>
+    <div class="subcolumns">
+      <div class="c50l">
+        <div class="subcl type-select">
+          <%= f.label :project_id_equals, 'Проект' %>
+          <%= f.collection_select :project_id_equals, Project.all, :id, :name, :include_blank => 'Все' %>
+        </div>
+        <div class="subcl type-select">
+          <%= f.label :category_id_equals, 'Категория' %>
+          <%= f.collection_select :category_id_equals, Category.all, :id, :name, :include_blank => 'Все' %>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :supplier_contains, 'Поставщик' %>
+          <%= f.text_field :supplier_contains %>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :entity_contains, 'Наименование' %>
+          <%= f.text_field :entity_contains %>
+        </div>
+      </div>
+      <div class="c50r">
+        <div class="subcr type-select">
+          <%= f.label :contractor_id_equals, 'РСИ' %>
+          <%= f.collection_select :contractor_id_equals, User.with_role("contractor"), :id, :name, :include_blank => 'Все' %>
+        </div>
+        <div class="subcr type-select">
+          <%= f.label :controller_id_equals, 'АПК' %>
+          <%= f.collection_select :controller_id_equals, User.with_role("controller"), :id, :name, :include_blank => 'Все' %>
+        </div>
+        <div class="subcr type-select">
+          <%= f.label :state_equals, 'Состояние' %>
+          <%= f.collection_select :state_equals, [['studying', 'РСИ'], ['approving', 'АПК'], ['archived', 'АРХИВ'], ['deleted_by_contractor', 'РСИ удаление'], ['deleted_by_controller', 'АПК удаление'], ['deleted', 'Удаленные']], :first, :last, :include_blank => 'Все' %>
+        </div>
+        <div class="subcr type-select" >
+          <%= f.label :state_switched_at_between, 'Отсчет' %>
+          <%= f.multiparameter_field :state_switched_at_between, {:field_type => :text_field, :class => "datepicker"}, {:field_type => :text_field, :class => "datepicker"} %>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <div class="subcr type-button">
+    <%= f.submit 'Отобрать', :class => "ui-button ui-button-text-only ui-corner-all" %>
+    <%= f.submit 'XLS', :class => "ui-button ui-button-text-only ui-corner-all" %>
+    &nbsp;
+    <span style="float:right"> ИТОГО:
+    <%= number_to_currency(@total_quantity, { :unit => ''}) %>/
+    <%= number_to_currency(@total_sum_without_delivery, { :unit => ''}) %>/
+    <%= number_to_currency(@total_sum_with_delivery, { :unit => ''})    %>
+    </span>
+  </div>
+
+<% end %>
+
+
+
+<%= form_tag fsm_specifications_path, :method => :put do %>
+<span id="toolbar" class="type-button" style="font-size:xx-small">
+	<% if can? :study, Specification then %>
+		<button id="button_approve" name="event" value="approve">Отправить на согласование</button>
+	<% end %>
+
+	<% if can? :approve, Specification then %>
+		<button id="button_accept" name="event" value="accept">Согласовать</button>
+		<button id="button_decline" name="event" value="decline">Отклонить</button>
+	<% end %>
+</span>
+
+<% if can? :study, Specification then %>
+  <div style="float:right"><%= link_to 'Добавить спецификацию', new_specification_path %></div>
+<% end %>
+
+<table class="full">
+<colgroup width="1%" /></colgroup>
+<colgroup width="2%"></colgroup>
+<colgroup width="5%"></colgroup>
+<colgroup width="5%"></colgroup>
+<colgroup width="25%"></colgroup>
+<colgroup width="2%"></colgroup>
+<colgroup width="1%"></colgroup>
+<colgroup width="1%"></colgroup>
+<colgroup width="1%"></colgroup>
+<colgroup width="1%"></colgroup>
+<colgroup width="2%"></colgroup>
+<colgroup width="1%"></colgroup>
+<colgroup width="7%"></colgroup>
+<colgroup width="7%"></colgroup>
+<colgroup width="5%"></colgroup>	
+<colgroup width="7%"></colgroup>
+<colgroup width="5%"></colgroup>
+<colgroup width="2%"></colgroup>
+<thead>
+<tr style="font-size:small">
+  <th><%= check_box_tag 'mass'%></th>
+  <th>#</th>
+  <th>Сост.</th>		
+  <th>Проект</th>
+  <th>Наименование</th>
+  <th>Ед.</th>
+  <th>Кол-во</th>
+  <th>Цена+</th>
+  <th>Цена-</th>
+  <th>Цена-,Д</th>
+  <th>Цена-,Д,ЗСР</th>
+  <th>Доставка</th>
+  <th>Сумма*</th>
+  <th>Поставщик</th>
+  <th>Ответств.</th>
+  <th>Отсчет</th>
+  <th>Время</th>
+  <th>Всего</th>
+</tr>
+</thead>
+<tbody>
+<% @specifications.each do |specification| %>
+  <tr class="<%= specification.state%>" style="font-size:small">
+    <td style="font-size:5pt;">
+      <input id="specification_ids_" value=<%= specification.id %> name="specification_ids[]" type="checkbox" <%= if (specification.studying? and (can? :study, Specification)) or (specification.approving? and (can? :approve, Specification)) then "enabled" else "disabled" end %>>
+    </td>
+    <td style="font-size:5pt;"><%= specification.id %></td>
+    <td style="font-size:5pt;"><%= {'studying'=>'РСИ', 'approving' => 'АПК', 'archived' => 'АРХИВ', 'deleted_by_contractor' => 'РСИ удаление', 'deleted_by_controller' => 'АПК удаление', 'deleted' => 'Удалено'}[specification.state] %></td>
+    <td style="font-size:5pt;">
+      <div><%= specification.project.code %></div>
+      <div><%= specification.category.code %></div>
+    </td>
+    <td><%= link_to specification.entity, if (specification.studying? and (can? :study, Specification)) or (specification.approving? and (can? :approve, Specification)) then edit_specification_path(specification) else specification end  %></td>
+    <td><%= specification.unit %></td>
+    <td style="text-align:right;font-size:8pt;"><%= number_with_precision(specification.quantity, :precision => 2) %></td>
+    <td colspan="5">
+      <div>
+        <div style="width:50px;float:left;text-align:right;font-size:8pt;"><%= number_to_currency(specification.price_with_vat, { :unit => '' }) %></div>
+        <div style="width:50px;float:left;text-align:right;font-size:8pt;"><%= number_to_currency(specification.price_with_vat/1.2, { :unit => '' }) %></div>
+        <div style="width:50px;float:left;text-align:right;font-size:8pt;"><%= number_to_currency((specification.price_with_vat+specification.coast_of_delivery)/1.2, { :unit => '' }) %></div>
+        <div style="width:50px;float:left;text-align:right;font-size:8pt;"><%= number_to_currency(1.02*(specification.price_with_vat+specification.coast_of_delivery)/1.2, { :unit => '' }) %></div>
+        <div style="text-align:right;font-size:8pt;"><%= number_to_currency(specification.coast_of_delivery, { :unit => '' }) %></div>
+      </div>
+      <div style="width:50px;color:red;text-align:right;font-size:8pt"><%= specification.recommended_conditions %></div>					
+    </td>
+    <td>
+      <div style="text-align:right;width:60;font-size:8pt;"><%= number_to_currency(specification.quantity*specification.price_with_vat, { :unit => ''}) %></div>
+      <div style="text-align:right;font-size:8pt;"><%= number_to_currency(specification.quantity*specification.coast_of_delivery, { :unit => ''}) %></div>
+    </td>
+    <td>
+      <div><%= specification.supplier %></div>
+      <div style="color:red"><%= specification.recommended_supplier %></div>
+    </td>
+    <td>
+      <div><%= specification.contractor.name if not specification.contractor.nil? %></div>
+      <div style="color:red"><%= specification.controller.name if not specification.controller.nil? %></div>
+    </td>		
+    <td style="font-size:6pt">
+      <div><%= specification.state_switched_at_human %></div>
+      <div><%= specification.state_duration_human %></div>
+    </td>	
+    <td style="font-size:6pt">
+      <div><%= specification.studying_duration_human %></div>
+      <div><%= specification.approving_duration_human %></div>
+    </td>	
+    <td style="font-size:6pt"><%= specification.total_duration_human %></td>
+  </tr>
+<% end %>		
+</tbody>
+</table>
+<% end %>
+
+

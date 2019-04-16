@@ -1,0 +1,127 @@
+class Activity {
+  0..1 User user
+  0..1 Channel channel
+}
+class Attachment {
+  0..1 Channel channel
+  0..1 User user
+}
+class Channel {
+  0+ Activity activities inverseof channel
+  0+ Attachment attachments inverseof channel
+  0..1 User user
+}
+class Setting {
+}
+authenticable class User {
+  0+ Activity activities inverseof user
+}
+
+usergroup admin
+usergroup nonadmin
+
+rule (inusergroup(admin) xor inusergroup(nonadmin))
+
+permit admin create, delete, read Activity
+permit admin create, delete, read Attachment
+permit admin create, delete, read Setting
+permit admin create, delete, read User
+permit admin, nonadmin create, delete, read Channel
+permit nonadmin read User
+permit nonadmin create, delete, read currentuser
+
+action ActivitiesController__create {
+  at__activity = create((oneof(Channel)).activities)
+  if (*) {
+    at__activity.user = currentuser
+  }
+}
+action ActivitiesController__index {}
+action ActivitiesController__show {
+  at__activity = oneof(Activity)
+}
+action Admin_AdminController__toggle_admin {
+  assert inusergroup(admin)
+}
+action Admin_AdminController__update {
+  assert inusergroup(admin)
+  if (isempty(Setting)) {
+    create Setting
+  } else {
+    oneof(Setting)
+  }
+}
+action Admin_AdminController__update_user {
+  assert inusergroup(admin)
+}
+action ApisController__active_users {}
+action ApisController__me {}
+action AttachmentsController__create {
+  at__channel = oneof(Channel)
+  at__attachment = create Attachment
+  at__attachment.user = currentuser
+  at__attachment.channel = at__channel
+}
+action AttachmentsController__destroy {
+  at__attachment = oneof(Attachment)
+  delete(at__attachment)
+}
+action AttachmentsController__index {
+  at__channel = oneof(Channel)
+  at__attachments = at__channel.attachments
+}
+action ChannelsController__create {
+  at__channel = create Channel
+  assert ((inusergroup(admin) and at__channel in Channel) or (inusergroup(nonadmin) and at__channel in Channel))
+  at__channel.user = currentuser
+}
+action ChannelsController__destroy {
+  at__channel = oneof(Channel)
+  assert ((inusergroup(admin) and at__channel in Channel) or (inusergroup(nonadmin) and at__channel in Channel))
+  delete(oneof(Channel).activities)
+  delete(oneof(Channel).attachments)
+  delete(oneof(Channel))
+}
+action ChannelsController__index {
+  at__channels = subset(Channel)
+  assert ((inusergroup(admin) and at__channels in Channel) or (inusergroup(nonadmin) and at__channels in Channel))
+}
+action ChannelsController__show {
+  at__channel = tryoneof(Channel)
+  assert ((inusergroup(admin) and at__channel in Channel) or (inusergroup(nonadmin) and at__channel in Channel))
+}
+action ChannelsController__update {
+  at__channel = oneof(Channel)
+  assert ((inusergroup(admin) and at__channel in Channel) or (inusergroup(nonadmin) and at__channel in Channel))
+}
+action MainController__search {
+  at__activities = empty
+  if (*) {
+    at__activities = subset(Activity)
+  }
+}
+action PagesController__about {}
+action PagesController__approval {}
+action PagesController__suspended {}
+action SessionsController__create {}
+action SessionsController__destroy {}
+action SessionsController__new {}
+action UsersController__index {
+  at__users = subset(User)
+  assert ((inusergroup(admin) and at__users in User) or (inusergroup(nonadmin) and at__users in union(currentuser, User)))
+}
+action UsersController__show {
+  at__user = empty
+  if (*) {
+    at__user = currentuser
+  }
+  assert ((inusergroup(admin) and at__user in User) or (inusergroup(nonadmin) and at__user in union(currentuser, User)))
+}
+
+invariant channelsHaveUsers: forall(Channel a: not isempty a.user)
+invariant activitiesHaveUsers: forall(Activity a: not isempty a.user)
+invariant activitiesHaveChannels: forall(Activity a: not isempty a.channel)
+invariant attachmentsHaveUsers: forall(Attachment a: not isempty a.user)
+invariant channelUserActivityTriangle: forall(Activity a: a.user == a.channel.user)
+invariant attachmentUserChannelTriangle: forall(Attachment a: a.user == a.channel.user)
+

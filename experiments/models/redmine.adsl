@@ -1,0 +1,1598 @@
+class AnonymousUser extends User {
+}
+class Attachment {
+  0..1 User author
+}
+class AuthSource {
+  0+ User users inverseof auth_source
+}
+class AuthSourceLdap extends AuthSource {
+}
+class Board {
+  0..1 Project project
+  0+ Message messages inverseof board
+  0..1 Message last_message
+  0..1 Board parent
+  0+ Board children inverseof parent
+}
+class Change {
+  0..1 Changeset changeset
+}
+class Changeset {
+  0..1 Repository repository
+  0..1 User user
+  0+ Change filechanges inverseof changeset
+  0+ Issue issues inverseof changesets
+  0+ Changeset parents inverseof children
+  0+ Changeset children
+}
+class Comment {
+  0..1 User author
+}
+class CustomField {
+  0+ CustomFieldEnumeration enumerations inverseof custom_field
+  0+ CustomValue custom_values inverseof custom_field
+  0+ Role roles inverseof custom_fields
+}
+class CustomFieldEnumeration {
+  0..1 CustomField custom_field
+}
+class CustomValue {
+  0..1 CustomField custom_field
+}
+class Document {
+  0..1 Project project
+  0..1 DocumentCategory category
+}
+class DocumentCategory extends Enumeration {
+  0+ Document documents inverseof category
+}
+class DocumentCategoryCustomField extends CustomField {
+}
+class DocumentCustomField extends CustomField {
+}
+class EmailAddress {
+  0..1 User user
+}
+class EnabledModule {
+  0..1 Project project
+}
+class Enumeration {
+  0..1 Project project
+}
+class Group extends Principal {
+  0+ User users inverseof groups
+}
+class GroupAnonymous extends GroupBuiltin {
+}
+class GroupBuiltin extends Group {
+}
+class GroupCustomField extends CustomField {
+}
+class GroupNonMember extends GroupBuiltin {
+}
+class Import {
+  0+ ImportItem items inverseof import
+  0..1 User user
+}
+class ImportItem {
+  0..1 Import import
+}
+class Issue {
+  0..1 Issue parent
+  0..1 Project project
+  0..1 Tracker tracker
+  0..1 IssueStatus status
+  0..1 User author
+  0..1 Principal assigned_to
+  0..1 Version fixed_version
+  0..1 IssuePriority priority
+  0..1 IssueCategory category
+  0+ TimeEntry time_entries inverseof issue
+  0+ Changeset changesets
+  0+ IssueRelation relations_from inverseof issue_from
+  0+ IssueRelation relations_to inverseof issue_to
+}
+class IssueCategory {
+  0..1 Project project
+  0..1 Principal assigned_to
+  0+ Issue issues inverseof category
+}
+class IssueCustomField extends CustomField {
+  0+ Project projects inverseof issue_custom_fields
+  0+ Tracker trackers inverseof custom_fields
+}
+class IssueImport extends Import {
+}
+class IssuePriority extends Enumeration {
+  0+ Issue issues inverseof priority
+}
+class IssuePriorityCustomField extends CustomField {
+}
+class IssueQuery extends Query {
+}
+class IssueRelation {
+  0..1 Issue issue_from
+  0..1 Issue issue_to
+}
+class IssueStatus {
+  0+ WorkflowTransition workflows inverseof old_status
+  0+ WorkflowTransition workflow_transitions_as_new_status inverseof new_status
+}
+class Journal {
+  0..1 Issue issue
+  0..1 User user
+  0+ JournalDetail details inverseof journal
+}
+class JournalDetail {
+  0..1 Journal journal
+}
+class Member {
+  0..1 User user
+  0+ MemberRole member_roles inverseof member
+  0..1 Project project
+}
+class MemberRole {
+  0..1 Member member
+  0..1 Role role
+}
+class Message {
+  0..1 Board board
+  0..1 User author
+}
+class News {
+  0..1 Project project
+  0..1 User author
+}
+class Principal {
+  0+ Member members inverseof user
+  0+ Member memberships inverseof user
+  0+ IssueCategory issue_categories inverseof assigned_to
+}
+class Project {
+  0..1 Project parent
+  0+ TimeEntryActivity time_entry_activities inverseof project
+  0+ Member memberships inverseof project
+  0+ Member members inverseof project
+  0+ EnabledModule enabled_modules inverseof project
+  0+ Tracker trackers inverseof projects
+  0+ Issue issues inverseof project
+  0+ Version versions inverseof project
+  0..1 Version default_version
+  0+ TimeEntry time_entries inverseof project
+  0+ IssueQuery queries inverseof project
+  0+ Document documents inverseof project
+  0+ News news inverseof project
+  0+ IssueCategory issue_categories inverseof project
+  0+ Board boards inverseof project
+  0..1 Repository repository inverseof project
+  0+ Repository repositories inverseof project
+  0..1 Wiki wiki inverseof project
+  0+ IssueCustomField issue_custom_fields
+}
+class ProjectCustomField extends CustomField {
+}
+class Query {
+  0..1 Project project
+  0..1 User user
+  0+ Role roles
+}
+class Repository {
+  0..1 Project project
+  0+ Changeset changesets inverseof repository
+}
+class Repository_Bazaar extends Repository {
+}
+class Repository_Cvs extends Repository {
+}
+class Repository_Darcs extends Repository {
+}
+class Repository_Filesystem extends Repository {
+}
+class Repository_Git extends Repository {
+}
+class Repository_Mercurial extends Repository {
+}
+class Repository_Subversion extends Repository {
+}
+class Role {
+  0+ WorkflowRule workflow_rules inverseof role
+  0+ CustomField custom_fields
+  0+ Role managed_roles
+  0+ MemberRole member_roles inverseof role
+}
+class Setting {
+}
+class TimeEntry {
+  0..1 Project project
+  0..1 Issue issue
+  0..1 User user
+  0..1 TimeEntryActivity activity
+}
+class TimeEntryActivity extends Enumeration {
+  0+ TimeEntry time_entries inverseof activity
+}
+class TimeEntryActivityCustomField extends CustomField {
+}
+class TimeEntryCustomField extends CustomField {
+}
+class TimeEntryQuery extends Query {
+}
+class Token {
+  0..1 User user
+}
+class Tracker {
+  0..1 IssueStatus default_status
+  0+ Issue issues inverseof tracker
+  0+ WorkflowRule workflow_rules inverseof tracker
+  0+ Project projects
+  0+ IssueCustomField custom_fields
+}
+authenticable class User extends Principal {
+  0+ Group groups
+  0+ Changeset changesets inverseof user
+  0..1 UserPreference preference inverseof user
+  0..1 Token rss_token inverseof user
+  0..1 Token api_token inverseof user
+  0..1 EmailAddress email_address inverseof user
+  0+ EmailAddress email_addresses inverseof user
+  0..1 AuthSource auth_source
+}
+class UserCustomField extends CustomField {
+}
+class UserPreference {
+  0..1 User user
+}
+class Version {
+  0..1 Project project
+  0+ Issue fixed_issues inverseof fixed_version
+}
+class VersionCustomField extends CustomField {
+}
+class Watcher {
+  0..1 User user
+}
+class Wiki {
+  0..1 Project project
+  0+ WikiPage pages inverseof wiki
+  0+ WikiRedirect redirects inverseof wiki
+}
+class WikiContent {
+  0..1 WikiPage page
+  0..1 User author
+}
+class WikiPage {
+  0..1 Wiki wiki
+  0..1 WikiContent content inverseof page
+  0..1 WikiContent content_without_text inverseof page
+  0..1 WikiPage parent
+  0+ WikiPage children inverseof parent
+}
+class WikiRedirect {
+  0..1 Wiki wiki
+}
+class WorkflowPermission extends WorkflowRule {
+}
+class WorkflowRule {
+  0..1 Role role
+  0..1 Tracker tracker
+  0..1 IssueStatus old_status
+  0..1 IssueStatus new_status
+}
+class WorkflowTransition extends WorkflowRule {
+}
+
+usergroup admin
+usergroup nonadmin
+
+rule (inusergroup(admin) xor inusergroup(nonadmin))
+
+action AccountController__activate {}
+action AccountController__activation_email {}
+action AccountController__login {}
+action AccountController__logout {
+  if (*) {
+    delete(subset(Token))
+    delete(subset(Token))
+    if (*) {
+      create AnonymousUser
+      empty
+    }
+    empty
+  }
+}
+action AccountController__lost_password {}
+action AccountController__register {}
+action ActivitiesController__index {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+    empty
+  } else {
+    true
+  }
+}
+action AdminController__default_configuration {}
+action AdminController__index {
+}
+action AdminController__info {
+  at__db_adapter_name = empty
+  at__checklist = empty
+}
+action AdminController__plugins {
+  at__plugins = empty
+}
+action AdminController__projects {}
+action AdminController__test_email {}
+action AttachmentsController__destroy {
+  at__attachment = oneof(Attachment)
+  at__project = empty
+  assert equal(at__attachment.author, oneof(User))
+}
+action AttachmentsController__download {
+  at__attachment = oneof(Attachment)
+  at__project = empty
+  assert equal(at__attachment.author, oneof(User))
+}
+action AttachmentsController__edit {
+  at__attachment = oneof(Attachment)
+  at__project = empty
+  assert equal(at__attachment.author, oneof(User))
+}
+action AttachmentsController__show {
+  at__attachment = oneof(Attachment)
+  at__project = empty
+  assert equal(at__attachment.author, oneof(User))
+}
+action AttachmentsController__thumbnail {
+  at__attachment = oneof(Attachment)
+  at__project = empty
+  assert equal(at__attachment.author, oneof(User))
+}
+action AttachmentsController__update {}
+action AttachmentsController__upload {
+  at__attachment = empty
+  if (*) {
+    at__attachment = create Attachment
+    at__attachment.author = oneof(User)
+    empty
+  }
+}
+action AuthSourcesController__autocomplete_for_new_user {}
+action AuthSourcesController__create {}
+action AuthSourcesController__destroy {
+  at__auth_source = oneof(AuthSource)
+  if (isempty(at__auth_source.users)) {
+    delete(at__auth_source)
+  }
+}
+action AuthSourcesController__edit {
+  at__auth_source = oneof(AuthSource)
+}
+action AuthSourcesController__index {}
+action AuthSourcesController__new {}
+action AuthSourcesController__test_connection {
+  at__auth_source = oneof(AuthSource)
+}
+action AuthSourcesController__update {
+  at__auth_source = oneof(AuthSource)
+}
+action AutoCompletesController__issues {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+}
+action BoardsController__create {
+  at__project = oneof(Project)
+  if (*) {
+    at__board = oneof(at__project.boards)
+  }
+  at__board = create((at__project).boards)
+}
+action BoardsController__destroy {
+  raise
+}
+action BoardsController__edit {
+  at__board = empty
+  at__project = oneof(Project)
+  if (*) {
+    at__board = oneof(at__project.boards)
+  }
+}
+action BoardsController__index {
+  at__board = empty
+  at__project = oneof(Project)
+  if (*) {
+    at__board = oneof(at__project.boards)
+  }
+}
+action BoardsController__new {
+  at__project = oneof(Project)
+  if (*) {
+    at__board = oneof(at__project.boards)
+  }
+  at__board = create((at__project).boards)
+}
+action BoardsController__show {
+  at__board = empty
+  at__project = oneof(Project)
+  if (*) {
+    at__board = oneof(at__project.boards)
+  }
+}
+action BoardsController__update {
+  at__board = empty
+  at__project = oneof(Project)
+  if (*) {
+    at__board = oneof(at__project.boards)
+  }
+}
+action CalendarsController__show {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+}
+action CommentsController__create {
+  at__news = oneof(News)
+  at__comment = empty
+  at__project = oneof(News).project
+  raise
+  at__comment = create Comment
+  at__comment.author = oneof(User)
+}
+action CommentsController__destroy {
+  at__news = oneof(News)
+  at__comment = empty
+  at__project = oneof(News).project
+}
+action ContextMenusController__issues {}
+action ContextMenusController__time_entries {}
+action CustomFieldEnumerationsController__create {
+  at__custom_field = oneof(CustomField)
+  at__value = create((at__custom_field).enumerations)
+}
+action CustomFieldEnumerationsController__destroy {
+  at__custom_field = oneof(CustomField)
+  at__value = oneof(at__custom_field.enumerations)
+}
+action CustomFieldEnumerationsController__index {
+  at__custom_field = oneof(CustomField)
+  at__values = at__custom_field.enumerations
+}
+action CustomFieldEnumerationsController__update_each {
+  at__custom_field = oneof(CustomField)
+}
+action CustomFieldsController__create {}
+action CustomFieldsController__destroy {
+  at__custom_field = oneof(CustomField)
+  if (*) {
+    delete(at__custom_field.enumerations)
+    delete(at__custom_field.custom_values)
+    delete(at__custom_field)
+  }
+}
+action CustomFieldsController__edit {
+  at__custom_field = oneof(CustomField)
+}
+action CustomFieldsController__index {}
+action CustomFieldsController__new {}
+action CustomFieldsController__update {
+  at__custom_field = oneof(CustomField)
+}
+action DocumentsController__add_attachment {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Document)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action DocumentsController__create {
+  at__project = oneof(Project)
+}
+action DocumentsController__destroy {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Document)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+  if (*) {
+    delete(at__object)
+  }
+}
+action DocumentsController__edit {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Document)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action DocumentsController__index {
+  at__project = oneof(Project)
+}
+action DocumentsController__new {
+  at__project = oneof(Project)
+  at__document = create((at__project).documents)
+}
+action DocumentsController__show {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Document)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+  at__attachments = empty
+}
+action DocumentsController__update {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Document)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action EmailAddressesController__create {
+  at__user = oneof(User)
+}
+action EmailAddressesController__destroy {
+  at__user = oneof(User)
+  at__address = oneof(at__user.email_addresses)
+  delete(at__address)
+}
+action EmailAddressesController__index {
+  at__user = oneof(User)
+}
+action EmailAddressesController__update {
+  at__user = oneof(User)
+  at__address = oneof(at__user.email_addresses)
+}
+action EnumerationsController__create {
+  at__enumeration = empty
+}
+action EnumerationsController__destroy {
+  at__enumeration = oneof(Enumeration)
+}
+action EnumerationsController__edit {
+  at__enumeration = oneof(Enumeration)
+}
+action EnumerationsController__index {
+  assert inusergroup(oneof(User), admin)
+}
+action EnumerationsController__new {
+  at__enumeration = empty
+}
+action EnumerationsController__update {
+  at__enumeration = oneof(Enumeration)
+}
+action FilesController__create {
+  at__project = oneof(Project)
+}
+action FilesController__index {
+  at__project = oneof(Project)
+}
+action FilesController__new {
+  at__project = oneof(Project)
+  at__versions = at__project.versions
+}
+action GanttsController__show {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+}
+action GroupsController__add_users {
+  at__group = oneof(Group)
+}
+action GroupsController__autocomplete_for_user {
+  at__group = oneof(Group)
+}
+action GroupsController__create {
+  at__group = create Group
+}
+action GroupsController__destroy {
+  at__group = oneof(Group)
+  delete(at__group.members.member_roles)
+  delete(at__group.members)
+  delete(at__group)
+}
+action GroupsController__edit {
+  at__group = oneof(Group)
+}
+action GroupsController__index {}
+action GroupsController__new {
+  at__group = create Group
+}
+action GroupsController__new_users {
+  at__group = oneof(Group)
+}
+action GroupsController__remove_user {
+  at__group = oneof(Group)
+  if (*) {
+    at__group.users -= oneof(at__group.users)
+  }
+}
+action GroupsController__show {
+  at__group = oneof(Group)
+}
+action GroupsController__update {
+  at__group = oneof(Group)
+}
+action ImportsController__create {
+  at__import = create IssueImport
+  at__import.user = oneof(User)
+}
+action ImportsController__mapping {
+  at__import = tryoneof(Import)
+}
+action ImportsController__new {}
+action ImportsController__run {
+  at__import = tryoneof(Import)
+}
+action ImportsController__settings {
+  at__import = tryoneof(Import)
+}
+action ImportsController__show {
+  at__import = tryoneof(Import)
+}
+action IssueCategoriesController__create {
+  at__project = oneof(Project)
+  at__category = create((at__project).issue_categories)
+}
+action IssueCategoriesController__destroy {
+  at__object = empty
+  if (*) {
+    at__object = oneof(IssueCategory)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__category = at__object
+  at__project = at__object.project
+}
+action IssueCategoriesController__edit {
+  at__object = empty
+  if (*) {
+    at__object = oneof(IssueCategory)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__category = at__object
+  at__project = at__object.project
+}
+action IssueCategoriesController__index {
+  at__project = oneof(Project)
+}
+action IssueCategoriesController__new {
+  at__project = oneof(Project)
+  at__category = create((at__project).issue_categories)
+}
+action IssueCategoriesController__show {
+  at__object = empty
+  if (*) {
+    at__object = oneof(IssueCategory)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__category = at__object
+  at__project = at__object.project
+}
+action IssueCategoriesController__update {
+  at__object = empty
+  if (*) {
+    at__object = oneof(IssueCategory)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__category = at__object
+  at__project = at__object.project
+}
+action IssueRelationsController__create {
+  at__current_journal = empty
+  at__issue = oneof(Issue)
+  at__project = at__issue.project
+  at__relation = create IssueRelation
+  at__relation.issue_from = at__issue
+  if (not isempty(at__relation.issue_from)) {
+    at__current_journal = if (isempty(at__current_journal)) {
+      create Journal
+    } else {
+      at__current_journal
+    }
+  }
+  if (not isempty(at__relation.issue_to)) {
+    at__current_journal = if (isempty(at__current_journal)) {
+      create Journal
+    } else {
+      at__current_journal
+    }
+  }
+}
+action IssueRelationsController__destroy {
+  at__current_journal = empty
+  at__relation = oneof(IssueRelation)
+  raise
+  if (not isempty(at__relation.issue_from)) {
+    at__current_journal = if (isempty(at__current_journal)) {
+      create Journal
+    } else {
+      at__current_journal
+    }
+  }
+  if (not isempty(at__relation.issue_to)) {
+    at__current_journal = if (isempty(at__current_journal)) {
+      create Journal
+    } else {
+      at__current_journal
+    }
+  }
+  delete(at__relation)
+}
+action IssueRelationsController__index {
+  at__issue = oneof(Issue)
+  at__project = at__issue.project
+  at__relations = empty
+}
+action IssueRelationsController__show {
+  at__relation = oneof(IssueRelation)
+  raise
+}
+action IssueStatusesController__create {
+  at__issue_status = create IssueStatus
+}
+action IssueStatusesController__destroy {
+  if (*) {
+    delete(oneof(IssueStatus))
+    empty
+  }
+}
+action IssueStatusesController__edit {
+  at__issue_status = oneof(IssueStatus)
+}
+action IssueStatusesController__index {
+  assert inusergroup(oneof(User), admin)
+}
+action IssueStatusesController__new {
+  at__issue_status = create IssueStatus
+}
+action IssueStatusesController__update {
+  at__issue_status = oneof(IssueStatus)
+}
+action IssueStatusesController__update_issue_done_ratio {}
+action IssuesController__bulk_edit {}
+action IssuesController__bulk_update {}
+action IssuesController__create {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+}
+action IssuesController__destroy {}
+action IssuesController__edit {}
+action IssuesController__index {
+  at__limit = empty
+  at__issue_count = empty
+  at__issue_pages = empty
+  at__offset = empty
+  at__issues = empty
+  at__issue_count_by_group = empty
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+  at__query = empty
+  at__query = if (isempty(at__query)) {
+    create IssueQuery
+  } else {
+    at__query
+  }
+  at__query.project = at__project
+  at__sort_default = empty
+  at__sort_criteria = empty
+  at__criteria = empty
+  if (*) {
+    at__limit = empty
+    at__issue_count = empty
+    at__issue_pages = empty
+    at__offset = if (not isempty(at__offset)) {
+      at__offset
+    }
+    at__issues = empty
+    at__issue_count_by_group = empty
+    empty
+  }
+}
+action IssuesController__new {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+}
+action IssuesController__show {}
+action IssuesController__update {}
+action JournalsController__diff {}
+action JournalsController__edit {}
+action JournalsController__index {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+}
+action JournalsController__new {}
+action JournalsController__update {}
+action MailHandlerController__index {}
+action MailHandlerController__new {}
+action MembersController__autocomplete {
+  at__project = oneof(Project)
+}
+action MembersController__create {
+  at__project = oneof(Project)
+}
+action MembersController__destroy {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Member)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action MembersController__index {
+  at__project = oneof(Project)
+}
+action MembersController__new {
+  at__project = oneof(Project)
+  at__member = create Member
+}
+action MembersController__show {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Member)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action MembersController__update {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Member)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action MessagesController__destroy {}
+action MessagesController__edit {}
+action MessagesController__new {
+  at__board = oneof(Board)
+  at__project = at__board.project
+}
+action MessagesController__preview {
+  at__board = oneof(Board)
+  at__project = at__board.project
+  message = oneof(at__board.messages)
+  at__text = empty
+  at__previewed = message
+}
+action MessagesController__quote {
+  at__subject = empty
+  if (*) {
+    at__subject = empty
+  }
+  at__content = empty
+}
+action MessagesController__reply {}
+action MessagesController__show {}
+action MyController__account {
+  at__user = oneof(User)
+  at__pref = at__user.preference
+}
+action MyController__add_block {
+  at__user = empty
+  if (*) {
+    at__user = oneof(User)
+    true
+  }
+}
+action MyController__destroy {
+  at__user = oneof(User)
+  if (not isempty(subset(User))) {
+    if (*) {
+      delete(at__user.members.member_roles)
+      delete(at__user.members)
+      delete(at__user.preference)
+      delete(at__user.email_addresses)
+      delete(at__user)
+      if (*) {
+        delete(subset(Token))
+        delete(subset(Token))
+        anonymous_user = tryoneof(AnonymousUser)
+        if (*) {
+          anonymous_user = create AnonymousUser
+          empty
+        }
+        anonymous_user
+      }
+      empty
+    }
+  }
+}
+action MyController__index {
+  at__user = oneof(User)
+  at__blocks = empty
+}
+action MyController__order_blocks {
+  at__user = oneof(User)
+}
+action MyController__page {
+  at__user = oneof(User)
+  at__blocks = empty
+}
+action MyController__page_layout {
+  at__user = oneof(User)
+  at__blocks = empty
+  at__block_options = empty
+}
+action MyController__password {
+  at__user = oneof(User)
+  if (if (*) {
+    true
+  } else {
+    false
+  }) {
+    if (*) {
+      if (*) {
+        if (*) {
+          if (*) {
+            create Token
+            empty
+          }
+        }
+      }
+    }
+  }
+}
+action MyController__remove_block {
+  at__user = oneof(User)
+}
+action MyController__reset_api_key {
+  at__name = empty
+  at__projects_by_role = empty
+  at__membership_by_project_id = empty
+  at__notified_projects_ids = empty
+  at__builtin_role = empty
+  at__visible_project_ids = empty
+  at__managed_roles = empty
+  if (*) {
+    if (not isempty(oneof(User).api_token)) {
+      delete(oneof(User).api_token)
+      at__name = empty
+      at__projects_by_role = empty
+      at__membership_by_project_id = empty
+      at__notified_projects_ids = empty
+      at__builtin_role = empty
+      at__visible_project_ids = empty
+      at__managed_roles = empty
+      oneof(User)
+    }
+    if (*) {
+      create((oneof(User)).api_token)
+    }
+  }
+}
+action MyController__reset_rss_key {
+  at__name = empty
+  at__projects_by_role = empty
+  at__membership_by_project_id = empty
+  at__notified_projects_ids = empty
+  at__builtin_role = empty
+  at__visible_project_ids = empty
+  at__managed_roles = empty
+  if (*) {
+    if (not isempty(oneof(User).rss_token)) {
+      delete(oneof(User).rss_token)
+      at__name = empty
+      at__projects_by_role = empty
+      at__membership_by_project_id = empty
+      at__notified_projects_ids = empty
+      at__builtin_role = empty
+      at__visible_project_ids = empty
+      at__managed_roles = empty
+      oneof(User)
+    }
+    if (*) {
+      create((oneof(User)).rss_token)
+    }
+  }
+}
+action MyController__show_api_key {
+  at__user = oneof(User)
+}
+action NewsController__create {
+  at__project = oneof(Project)
+}
+action NewsController__destroy {
+  at__object = empty
+  if (*) {
+    at__object = oneof(News)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+  delete(at__object)
+}
+action NewsController__edit {
+  at__object = empty
+  if (*) {
+    at__object = oneof(News)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action NewsController__index {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+    empty
+  } else {
+    true
+  }
+}
+action NewsController__new {
+  at__project = oneof(Project)
+  at__news = create News
+}
+action NewsController__show {
+  at__object = empty
+  if (*) {
+    at__object = oneof(News)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+  at__comments = empty
+}
+action NewsController__update {
+  at__object = empty
+  if (*) {
+    at__object = oneof(News)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action PreviewsController__issue {
+  at__project = oneof(Project)
+}
+action PreviewsController__news {
+  at__project = oneof(Project)
+}
+action PrincipalMembershipsController__create {
+  at__principal = oneof(Principal)
+  at__members = empty
+}
+action PrincipalMembershipsController__destroy {}
+action PrincipalMembershipsController__new {
+  at__principal = oneof(Principal)
+  at__projects = subset(Project)
+  at__roles = empty
+}
+action PrincipalMembershipsController__update {}
+action ProjectEnumerationsController__destroy {
+  at__project = oneof(Project)
+  foreach time_entry_activity: at__project.time_entry_activities {
+    delete(time_entry_activity)
+  }
+}
+action ProjectEnumerationsController__update {
+  at__project = oneof(Project)
+}
+action ProjectsController__archive {
+  at__project = oneof(Project)
+}
+action ProjectsController__close {
+  at__project = oneof(Project)
+}
+action ProjectsController__copy {}
+action ProjectsController__create {}
+action ProjectsController__destroy {
+  at__project = oneof(Project)
+}
+action ProjectsController__edit {
+  at__project = oneof(Project)
+}
+action ProjectsController__index {
+  scope = subset(Project)
+  at__project = scope
+}
+action ProjectsController__modules {
+  at__project = oneof(Project)
+  if (*) {
+    at__project.enabled_modules = subset(EnabledModule)
+  } else {
+    delete(at__project.enabled_modules)
+  }
+}
+action ProjectsController__new {}
+action ProjectsController__reopen {
+  at__project = oneof(Project)
+}
+action ProjectsController__settings {
+  at__project = oneof(Project)
+}
+action ProjectsController__show {
+  at__project = oneof(Project)
+}
+action ProjectsController__unarchive {
+  at__project = oneof(Project)
+}
+action ProjectsController__update {
+  at__project = oneof(Project)
+}
+action QueriesController__create {}
+action QueriesController__destroy {
+  at__query = oneof(Query)
+  at__project = at__query.project
+  raise
+  delete(at__query)
+}
+action QueriesController__edit {
+  at__query = oneof(Query)
+  at__project = at__query.project
+  raise
+}
+action QueriesController__index {}
+action QueriesController__new {}
+action QueriesController__update {
+  at__query = oneof(Query)
+  at__project = at__query.project
+  raise
+}
+action ReportsController__issue_report {
+  at__project = oneof(Project)
+}
+action ReportsController__issue_report_details {
+  raise
+}
+action RolesController__create {}
+action RolesController__destroy {
+  at__role = oneof(Role)
+  if (*) {
+    delete(at__role.workflow_rules)
+    delete(at__role.member_roles)
+    delete(at__role)
+    empty
+  }
+}
+action RolesController__edit {
+  at__role = oneof(Role)
+}
+action RolesController__index {
+  assert inusergroup(oneof(User), admin)
+}
+action RolesController__new {}
+action RolesController__permissions {}
+action RolesController__show {
+  assert inusergroup(oneof(User), admin)
+  at__role = oneof(Role)
+}
+action RolesController__update {
+  at__role = oneof(Role)
+}
+action SearchController__index {}
+action SettingsController__edit {}
+action SettingsController__index {}
+action SettingsController__plugin {}
+action SysController__create_project_repository {}
+action SysController__fetch_changesets {}
+action SysController__projects {}
+action TimelogController__bulk_edit {}
+action TimelogController__bulk_update {}
+action TimelogController__create {
+  at__issue = empty
+  at__project = empty
+  if (*) {
+    at__issue = oneof(Issue)
+    at__project = at__issue.project
+  } else {
+    if (*) {
+      at__project = oneof(Project)
+    }
+  }
+}
+action TimelogController__destroy {}
+action TimelogController__edit {
+  at__time_entry = oneof(TimeEntry)
+  raise
+  at__project = at__time_entry.project
+}
+action TimelogController__index {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+}
+action TimelogController__new {
+  at__issue = empty
+  at__project = empty
+  if (*) {
+    at__issue = oneof(Issue)
+    at__project = at__issue.project
+  } else {
+    if (*) {
+      at__project = oneof(Project)
+    }
+  }
+  at__time_entry = subset(tryoneof(TimeEntry))
+  if (isempty(at__time_entry)) {
+    create TimeEntry
+  } else {
+    at__time_entry
+  }
+}
+action TimelogController__report {
+  at__project = empty
+  if (*) {
+    at__project = oneof(Project)
+  }
+  at__query = empty
+  at__query = if (isempty(at__query)) {
+    create TimeEntryQuery
+  } else {
+    at__query
+  }
+  at__query.project = at__project
+  at__report = empty
+}
+action TimelogController__show {
+  at__time_entry = oneof(TimeEntry)
+  raise
+  at__project = at__time_entry.project
+}
+action TimelogController__update {
+  at__time_entry = oneof(TimeEntry)
+  raise
+  at__project = at__time_entry.project
+}
+action TrackersController__create {}
+action TrackersController__destroy {
+  at__tracker = oneof(Tracker)
+  if (isempty(at__tracker.issues)) {
+    delete(at__tracker.workflow_rules)
+    delete(at__tracker)
+  }
+}
+action TrackersController__edit {
+  at__tracker = subset(tryoneof(Tracker))
+  at__tracker = if (isempty(at__tracker)) {
+    oneof(Tracker)
+  } else {
+    at__tracker
+  }
+  at__projects = Project
+}
+action TrackersController__fields {}
+action TrackersController__index {
+  assert inusergroup(oneof(User), admin)
+}
+action TrackersController__new {}
+action TrackersController__update {
+  at__tracker = oneof(Tracker)
+}
+action UsersController__create {
+  at__auth_sources = empty
+  at__user = create User
+  if (*) {
+    at__auth_sources = AuthSource
+    empty
+  }
+}
+action UsersController__destroy {
+  at__user = oneof(User)
+  delete(at__user.members.member_roles)
+  delete(at__user.members)
+  delete(at__user.preference)
+  delete(at__user.email_addresses)
+  delete(at__user)
+}
+action UsersController__edit {
+  at__user = oneof(User)
+  at__auth_sources = AuthSource
+  at__membership = subset(tryoneof(Member))
+  at__membership = if (isempty(at__membership)) {
+    create Member
+  } else {
+    at__membership
+  }
+}
+action UsersController__index {}
+action UsersController__new {
+  at__user = create User
+  at__auth_sources = AuthSource
+}
+action UsersController__show {
+  at__user = oneof(User)
+}
+action UsersController__update {
+  at__auth_sources = empty
+  at__membership = empty
+  at__user = oneof(User)
+  if (*) {
+    at__auth_sources = AuthSource
+    at__membership = if (isempty(at__membership)) {
+      create Member
+    } else {
+      at__membership
+    }
+    empty
+  }
+}
+action VersionsController__close_completed {
+  at__project = oneof(Project)
+}
+action VersionsController__create {
+  at__project = oneof(Project)
+}
+action VersionsController__destroy {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Version)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action VersionsController__edit {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Version)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action VersionsController__index {
+  at__project = oneof(Project)
+}
+action VersionsController__new {
+  at__project = oneof(Project)
+  at__version = create((at__project).versions)
+}
+action VersionsController__show {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Version)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action VersionsController__status_by {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Version)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action VersionsController__update {
+  at__object = empty
+  if (*) {
+    at__object = oneof(Version)
+    if (not isempty(at__object)) {
+      at__object
+    }
+  }
+  at__project = at__object.project
+}
+action WatchersController__append {}
+action WatchersController__autocomplete_for_user {
+  at__users = empty
+}
+action WatchersController__create {}
+action WatchersController__destroy {}
+action WatchersController__new {
+  at__users = empty
+}
+action WatchersController__unwatch {
+  at__watchables = empty
+}
+action WatchersController__watch {
+  at__watchables = empty
+}
+action WelcomeController__index {
+  at__news = empty
+}
+action WelcomeController__robots {
+  at__projects = subset(Project)
+}
+action WikiController__add_attachment {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+}
+action WikiController__annotate {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+  at__annotate = empty
+  raise
+}
+action WikiController__date_index {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+}
+action WikiController__destroy {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+}
+action WikiController__destroy_version {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+}
+action WikiController__diff {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+  at__diff = empty
+  raise
+}
+action WikiController__edit {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+}
+action WikiController__export {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+}
+action WikiController__history {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+}
+action WikiController__index {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+}
+action WikiController__new {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+}
+action WikiController__preview {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+}
+action WikiController__protect {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+}
+action WikiController__rename {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+  at__original_title = empty
+}
+action WikiController__show {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+}
+action WikiController__update {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+  assert not isempty(at__wiki)
+  at__page = {
+    page = tryoneof(at__wiki.pages)
+    page
+  }
+}
+action WikisController__edit {
+  at__project = oneof(Project)
+  at__wiki = at__project.wiki
+}
+action WorkflowsController__copy {}
+action WorkflowsController__edit {}
+action WorkflowsController__index {}
+action WorkflowsController__permissions {}
+
+invariant attachmentsHaveAuthors: forall(Attachment a: not isempty(a.author))
+invariant changesHaveChangesents: forall(Change c: not isempty(c.changeset))
+invariant changesetsHaveRepositories: forall(Changeset c: not isempty(c.repository))
+invariant commentsHaveAuthors: forall(Comment c: not isempty(c.author))
+invariant customFieldEnumerationsHaveCustomFields: forall(CustomFieldEnumeration cfe: not isempty(cfe.custom_field))
+invariant documentsHaveProjects: forall(Document d: not isempty(d.project))
+invariant importItemsHaveImports: forall(ImportItem ii: not isempty(ii.import))
+invariant importsHaveUsers: forall(Import i: not isempty(i.user))
+invariant issuesHaveProjects: forall(Issue i: not isempty(i.project))
+invariant issuesHaveTrackers: forall(Issue i: not isempty(i.tracker))
+invariant issueRelationsHaveIssueFroms: forall(IssueRelation ir: not isempty(ir.issue_from))
+invariant issueRelationsHaveIssueTos: forall(IssueRelation ir: not isempty(ir.issue_to))
+invariant membersHaveProjects: forall(Member m: not isempty(m.project))
+invariant memberRolesHaveRoles: forall(MemberRole mr: not isempty(mr.role))
+invariant messagesHaveBoards: forall(Message m: not isempty(m.board))
+invariant timeEntriesHaveProjects: forall(TimeEntry te: not isempty(te.project))
+invariant timeEntriesHaveUser: forall(TimeEntry te: not isempty(te.user))
+invariant timeEntriesHaveActivity: forall(TimeEntry te: not isempty(te.activity))
+invariant watchersHaveUsers: forall(Watcher w: not isempty(w.user))
+invariant workflowRulesHaveRoles: forall(WorkflowRule wr: not isempty(wr.role))
+invariant workflowRulesHaveTrackers: forall(WorkflowRule wr: not isempty(wr.tracker))
+

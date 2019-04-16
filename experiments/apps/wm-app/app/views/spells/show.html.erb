@@ -1,0 +1,34 @@
+<p></p>
+<table id="spell_stats" class="stat_table">
+	<tr>
+		<th>SPELL</th>
+		<th>COST</th>
+		<th>RNG</th>
+		<th>AOE</th>
+		<th>POW</th>
+		<th>UP</th>
+		<th>OFF</th>
+	</tr>
+	<tr>
+		<td class="left_align"><strong><%= @spell.name %></strong></td>
+		<td><%= @spell.cost %></td>
+		<td><%= @spell.rng %></td>
+		<td><%= statDash @spell.aoe %></td>
+		<td><%= statDash @spell.pow %></td>
+		<td><%= bool2Affirm @spell.up %></td>
+		<td><%= bool2Affirm @spell.off %></td>
+	</tr>
+	<tr>
+		<td colspan="7" class="left_align"><%= @spell.desc %></td>
+	</tr>
+</table>
+
+<h2>Models with this spell</h2>
+<% @spell.models.each do |model| %>
+	<%= model_link model %><br />
+<% end %>
+
+<br />
+
+<%= link_to('Edit', edit_spell_path(@spell)) + ' |' if can? :update, @spell %>
+<%= link_to 'Back', spells_path %>

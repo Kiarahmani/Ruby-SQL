@@ -1,0 +1,21 @@
+.user_list
+  list-style: none
+  margin: 1px 1px 1px 0
+  padding: 0
+  max-height: 170px
+  overflow-y: auto
+  +has-scrollbar
+
+  .user
+    @extend %user
+    color: #585D5F
+    font-weight: bold
+    margin: 0
+    padding-right: 70px
+    position: relative
+
+    .badge
+      margin: 0
+      position: absolute
+      top: 9px
+      right: 10px

@@ -1,0 +1,15 @@
+//= require soca
+//= require animations
+//= require redactor-rails
+
+#errors.json {
+    display: none;
+}
+#delivery-services .inner-table
+{
+    width:40%;
+}
+#attachments, #skus
+{
+    min-height: 188px;
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= content_for?(:title) ? yield(:title) : "Kandan" %></title>
+  <%= favicon_link_tag %>
+  <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <%= stylesheet_link_tag "//fonts.googleapis.com/css?family=PT+Sans:400,700" %>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= yield :head %>
+  <%- if user_signed_in? %>
+    <%= javascript_tag do %>
+      $.data(document, "current-user", <%= json_escape(current_user_data.to_json.html_safe) %>);
+    <% end %>
+  <%- end %>
+</head>
+<body id="kandan" data-kandan-config="<%= Kandan::Config.to_json %>">
+  <% if content_for? :sidebar %>
+    <aside class="sidebar">
+      <%= yield :sidebar %>
+    </aside>
+  <% end %>
+  <article class="main-area">
+    <%= render "layouts/header" %>
+    <%= render "layouts/messages" %>
+    <%= yield %>
+  </article>
+  <%= yield :end %>
+</body>
+</html>

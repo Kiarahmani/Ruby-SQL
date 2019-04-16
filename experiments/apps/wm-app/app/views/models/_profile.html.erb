@@ -1,0 +1,49 @@
+<% if model.parent.nil? %>
+  <h1><%= model.name %><br />
+  <small><%= model_title model %></small></h1>
+<% end %>
+
+<%= render :partial => 'models/stats', :locals => { :model => model } %>
+
+<%= render :partial => 'models/weapons', :locals => { :model => model } %>
+
+<p>
+  <%= model_wjdamage model %>
+  <%= model_focus model %>
+  <%= model_threshold model %>
+  <%= extra_stat model %>
+  <%= model_damage model %>
+  <%= model_allowance model %>
+  <%= model_cost model %>
+  <%= model_wjpoints model %>
+  <%= model_base model %>
+</p>
+
+<%= model_feat model %>
+
+<%= model_mercs model %>
+
+<%= render :partial => 'models/rules', :locals => { :model => model } %>
+
+<div id="weapon_traits">
+	<% model.weapons.each do |weapon| %>
+		<%= render :partial => 'weapons/traits', :locals => { :weapon => weapon } %>
+	<% end %>
+</div>
+
+<%= render 'spells/stats', :spells => model.spells, :type => model.warjack? ? "ANIMUS" : "SPELLS" %>
+
+<% if can? :create, Spell %>
+  <%= form_tag add_spell_models_path, :class => 'model_addition' do %>
+  	<%= hidden_field 'model', 'id', :value => model.id %>
+  	<%#= collection_select(:model, :spells, @available_spells, :id, :name) %>
+  	<%= collection_select(:model, :spells, Spell.order(:name), :id, :name) %>
+  	<%= submit_tag "Add Spell" %>
+  <% end %>
+  <p><%= link_to 'New Spell', new_spell_path, :id => 'newspell', :rel => 'updater' %></p>
+  <div id="x_newspell"></div>
+<% end %>
+
+<% model.sub_models.each do |sub| %>
+  <%= render :partial => 'models/profile', :locals => { :model => sub } if !model.dragoon? || can?(:update, sub) %>
+<% end %>

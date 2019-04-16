@@ -1,0 +1,41 @@
+<%= render 'nav', { resource: :weight, location: :index} %>
+
+<div class="container-fluid">
+  <%= render 'cards' %>
+
+  <div class="row">
+    <div class="col-sm-12 col-lg-10 col-lg-offset-1">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Value (kg)</th>
+            <th class="hidden-xs">Lean Mass (kg) </th>
+            <th class="hidden-xs">Fat Mass (kg)</th>
+            <th>Fat (%)</th>
+            <th>BMI</th>
+            <th class="hidden-xs">Source</th>
+            <th class="hidden-xs">API</th>
+            <th class="hidden-xs"></th>
+            <th class="hidden-xs"></th>
+          </tr>
+        </thead>
+
+        <% @weights.each do |weight| %>
+          <tr>
+            <td><%= link_to weight.date.to_formatted_s(:short), weight %></td>
+            <td><%= weight.value.round(1) %></td>
+            <td class="hidden-xs"><%= weight.lean_mass.present? ? weight.lean_mass.round(1) : nil %></td>
+            <td class="hidden-xs"><%= weight.fat_mass.present? ? weight.fat_mass.round(1) : nil %></td>
+            <td><%= weight.fat_percent.present? ? weight.fat_percent.round(1) : nil %></td>
+            <td><%= weight.bmi.present? ? weight.bmi.round(1) : nil %></td>
+            <td class="hidden-xs"><%= weight.source %></td>
+            <td class="hidden-xs"><%= link_to 'JSON', weight_path(weight, format: :json) %></td>
+            <td class="hidden-xs"><%= link_to 'Edit', edit_weight_path(weight) %></td>
+            <td class="hidden-xs"><%= link_to 'Destroy', weight_path(weight), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>

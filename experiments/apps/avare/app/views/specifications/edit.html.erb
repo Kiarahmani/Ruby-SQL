@@ -1,0 +1,65 @@
+<h1>Редактирование спецификации #<%= @specification.id %></h1>
+
+<% if @specification.studying? then %>
+	<%= render 'request_form' %>
+<% else %>
+	<%= render 'response_form' %>
+<% end %>
+
+
+<table class="full">
+<colgroup width="5%"></colgroup>
+<colgroup width="2%"></colgroup>
+<colgroup width="5%"></colgroup>
+<colgroup width="40%"></colgroup>
+<colgroup width="2%"></colgroup>
+<colgroup width="20px"></colgroup>
+<colgroup width="20px"></colgroup>
+<colgroup width="20px"></colgroup>
+<colgroup width="7%"></colgroup>
+<colgroup width="5%"></colgroup>	
+<thead>
+<tr style="font-size:xx-small">
+  <th>Изменено</th>		
+  <th>Сост.</th>		
+  <th>Проект</th>
+  <th>Наименование</th>
+  <th>Ед.</th>
+  <th>Кол-во</th>
+  <th>Цена</th>
+  <th>Доставка</th>
+  <th>Поставщик</th>
+  <th>Ответств.</th>
+</tr>
+</thead>
+<tbody>
+  <% @specification.specification_logs.each do |specification| %>
+  <tr class="<%= specification.state%>" style="font-size:xx-small">
+    <td><%= specification.updated_at.strftime("%d.%m.%y %H:%M:%S") %></td>
+    <td><%= {'studying'=>'РСИ', 'approving' => 'АПК', 'archived' => 'АРХИВ'}[specification.state] %></td>
+    <td><div><%= specification.project.code %></div><div><%= specification.category.code %></div></td>
+    <td><%= specification.entity %></td>
+    <td><%= specification.unit %></td>
+    <td align="right"><%= number_with_precision(specification.quantity, :precision => 2) %></td>
+    <td colspan="2">
+	<div>
+	  <div style="float:left;text-align:right"><%= number_to_currency(specification.price_with_vat, { :unit => '' }) %></div>
+	  <div style="text-align:right"><%= number_to_currency(specification.coast_of_delivery, { :unit => '' }) %></div>
+	</div>
+        <div style="color:red;text-alignt:center;color:red"><%= specification.recommended_conditions %></div>					
+        <div style="color:green;text-alignt:center;color:red"><%= specification.notice %></div>					
+        <div style="color:red;text-alignt:center;color:red"><%= specification.recommended_notice %></div>					
+    </td>
+    <td>
+      <div><%= specification.supplier %></div>
+      <div style="color:red"><%= specification.recommended_supplier %></div>
+    </td>
+    <td>
+      <div><%= specification.contractor.name if not specification.contractor.nil? %></div>
+      <div><%= specification.controller.name if not specification.controller.nil? %></div>
+    </td>		
+  </tr>
+<% end %>		
+	
+</tbody>
+</table>

@@ -1,0 +1,8 @@
+<h1><%= @grid.name %></h1>
+
+<%= render :partial => 'grid', :locals => { :grid => @grid } %>
+
+<br />
+
+<%= link_to('Edit', edit_damage_grid_path(@grid)) + ' |' if can? :update, @grid %>
+<%= link_to 'Back', damage_grids_path %>

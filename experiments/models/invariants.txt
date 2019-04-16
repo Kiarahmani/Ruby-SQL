@@ -1,0 +1,210 @@
+kandan
+
+invariant channelsHaveUsers: forall(Channel a: not isempty a.user)
+invariant activitiesHaveUsers: forall(Activity a: not isempty a.user)
+invariant attachmentsHaveUsers: forall(Attachment a: not isempty a.user)
+invariant channelUserActivityTriangle: forall(Activity a: a.user == a.channel.user)
+invariant attachmentUserChannelTriangle: forall(Attachment a: a.user == a.channel.user)
+
+tracks
+
+invariant attachmentsHaveTodos: forall(Attachment a: not isempty(a.todo))
+invariant dependenciesHavePredecessors: forall(Dependency d: not isempty(d.predecessor))
+invariant dependenciesHaveSuccessors: forall(Dependency d: not isempty(d.successor))
+invariant preferencesHaveUsers: forall(Preference p: not isempty(p.user))
+invariant todosOfProjectHaveTheProjectsUser: forall(Todo t: t.user == t.project.user)
+invariant notesOfProjectHaveTheProjectsUser: forall(Note n: n.user == n.project.user)
+invariant acyclicDeps: forall(Dependency d1, Dependency d2: not((d1.predecessor == d2.successor) and (d1.successor == d2.predecessor)))
+invariant asymmetricDeps: forall(Dependency d: isempty(d.predecessor) or (d.predecessor != d.successor))
+invariant tagsHaveAtLeastOneTagging: forall(Tag t: not isempty(t.taggings))
+
+fulcrum
+
+invariant storiesHaveProjects: forall(Story s: not(isempty(s.project)))
+invariant storiesRequestedByProjectUsers: forall(Story s: s.requested_by in s.project.users)
+invariant storiesOwnedByProjectUsers: forall(Story s: s.owned_by in s.project.users)
+invariant changesetsHaveProjects: forall(Changeset c: not(isempty(c.project)))
+invariant changesetsHaveStories: forall(Changeset c: not(isempty(c.story)))
+invariant noteUsersAreProjectUsers: forall(Note n: n.user in n.story.project.users)
+
+lobsters
+
+invariant commentsHaveUsers:   forall(Comment c: not isempty(c.user))
+invariant commentsHaveStories: forall(Comment c: not isempty(c.story))
+invariant hatsHaveUsers:          forall(Hat h: not isempty(h.user))
+invariant hatsHaveGrantedByUsers: forall(Hat h: not isempty(h.granted_by_user))
+invariant hatsRequestsHaveUsers: forall(HatRequest hr: not isempty(hr.user))
+invariant hiddenStoriesHaveUsers:   forall(HiddenStory hs: not isempty(hs.user))
+invariant hiddenStoriesHaveStories: forall(HiddenStory hs: not isempty(hs.story))
+invariant messagesHaveRecipients: forall(Message m: not isempty(m.recipient))
+invariant storiesHaveUsers: forall(Story s: not isempty(s.user))
+
+sprintapp
+
+invariant contactsHaveClients: forall(Contact c: not isempty(c.client))
+invariant milestonesHaveProjects: forall(Milestone m: not isempty(m.project))
+invariant projectsHaveClients: forall(Project p: not isempty(p.client))
+invariant projectsHaveProductOwners: forall(Project p: not isempty(p.product_owner))
+invariant projectFilesHaveProjects: forall(ProjectFile pf: not isempty(pf.project))
+invariant ticketsHaveProjects: forall(Ticket t: not isempty(t.project))
+invariant ticketTimersHaveTickets: forall(TicketTimer tt: not isempty(tt.ticket))
+invariant ticketCommentsHaveTickets: forall(TicketComment tc: not isempty(tc.ticket))
+
+redmine
+
+invariant attachmentsHaveAuthors: forall(Attachment a: not isempty(a.author))
+invariant changesHaveChangesents: forall(Change c: not isempty(c.changeset))
+invariant changesetsHaveRepositories: forall(Changeset c: not isempty(c.repository))
+invariant commentsHaveAuthors: forall(Comment c: not isempty(c.author))
+invariant customFieldEnumerationsHaveCustomFields: forall(CustomFieldEnumeration cfe: not isempty(cfe.custom_field))
+invariant documentsHaveProjects: forall(Document d: not isempty(d.project))
+invariant importItemsHaveImports: forall(ImportItem ii: not isempty(ii.import))
+invariant importsHaveUsers: forall(Import i: not isempty(i.user))
+invariant issuesHaveProjects: forall(Issue i: not isempty(i.project))
+invariant issuesHaveTrackers: forall(Issue i: not isempty(i.tracker))
+invariant issueRelationsHaveIssueFroms: forall(IssueRelation ir: not isempty(ir.issue_from))
+invariant issueRelationsHaveIssueTos: forall(IssueRelation ir: not isempty(ir.issue_to))
+invariant membersHaveProjects: forall(Member m: not isempty(m.project))
+invariant memberRolesHaveRoles: forall(MemberRole mr: not isempty(mr.role))
+invariant messagesHaveBoards: forall(Message m: not isempty(m.board))
+invariant timeEntriesHaveProjects: forall(TimeEntry te: not isempty(te.project))
+invariant timeEntriesHaveUser: forall(TimeEntry te: not isempty(te.user))
+invariant timeEntriesHaveActivity: forall(TimeEntry te: not isempty(te.activity))
+invariant watchersHaveUsers: forall(Watcher w: not isempty(w.user))
+invariant workflowRulesHaveRoles: forall(WorkflowRule wr: not isempty(wr.role))
+invariant workflowRulesHaveTrackers: forall(WorkflowRule wr: not isempty(wr.tracker))
+
+fatfree
+
+invariant account_contact_has_account: forall(account_contact in allof(AccountContact): not(isempty(account_contact.account)))
+invariant account_contact_has_contact: forall(account_contact in allof(AccountContact): not(isempty(account_contact.contact)))
+invariant account_opportunity_has_account: forall(account_opportunity in allof(AccountOpportunity): not(isempty(account_opportunity.account)))
+invariant account_opportunity_has_opportunity: forall(account_opportunity in allof(AccountOpportunity):
+  not(isempty(account_opportunity.opportunity))
+)
+invariant contact_opportunity_has_contact: forall(contact_opportunity in allof(ContactOpportunity): isempty(contact_opportunity.contact))
+invariant contact_opportunity_has_opportunity: forall(contact_opportunity in allof(ContactOpportunity):
+  not(isempty(contact_opportunity.opportunity))
+)
+invariant permissions_apply_to_either_groups_or_users: forall(permission in Permission:
+  isempty(permission.user) == not(isempty permission.group)
+)
+invariant task_has_user: forall(task in allof(Task): not(isempty(task.user)))
+
+copycopter
+
+invariant blurbsHaveProjects: forall(Blurb b: not isempty(b.project))
+invariant localesHaveProjects: forall(Locale l: not isempty(l.project))
+invariant localesHaveUniqueProjects: forall(Locale l1, Locale l2: (l1 != l2) => (l1.project != l2.project))
+invariant localizationsHaveBlurbs: forall(Localization l: not isempty(l.blurb))
+invariant localizationsHaveLocales: forall(Localization l: not isempty(l.locale))
+invariant textCachesHaveProjects: forall(TextCache tc: exists(Project p: tc == p.published_cache))
+
+obtvse2
+
+invariant usersAreCreated: exists(User u)
+
+squaresquash
+
+invariant commentsHaveBugs: forall(Comment c: not isempty(c.bug))
+invariant deploysHaveEnvironments: forall(Deploy d: not isempty(d.environment))
+invariant deviceBugsHaveBugs: forall(DeviceBug db: not isempty(db.bug))
+invariant emailsHaveUsers: forall(Email e: not isempty(e.user))
+invariant environmentsHaveProjects: forall(Environment e: not isempty(e.project))
+invariant eventsHaveBugs: forall(Event e: not isempty(e.bug))
+invariant membershipsHaveUsers: forall(Membership m: not isempty(m.user))
+invariant membershipsHaveProjects: forall(Membership m: not isempty(m.project))
+invariant notificationThresholdsHaveUsers: forall(NotificationThreshold nt: not isempty(nt.user))
+invariant notificationThresholdsHaveBugs: forall(NotificationThreshold nt: not isempty(nt.bug))
+invariant obfuscationMapsHaveDeploys: forall(ObfuscationMap om: not isempty(om.deploy))
+invariant occurrencesHaveBugs: forall(Occurrence o: not isempty(o.bug))
+invariant projectsHaveOwners: forall(Project p: not isempty(p.owner))
+invariant sourceMapsHaveEnvironments: forall(SourceMap sm: not isempty(sm.environment))
+invariant userEventsHaveUsers: forall(UserEvent ue: not isempty(ue.user))
+invariant userEventsHaveEvents: forall(UserEvent ue: not isempty(ue.event))
+invariant watchesHaveUsers: forall(Watch w: not isempty(w.user))
+invariant watchesHaveBugs: forall(Watch w: not isempty(w.bug))
+
+avare
+
+invariant specificationsHaveCategories: forall(Specification s: not isempty(s.category))
+invariant specificationsHaveProjects: forall(Specification s: not isempty(s.project))
+invariant specificationsHaveContractor: forall(Specification s: not isempty(s.contractor))
+
+communautaire
+
+invariant articlesHaveAuthors: forall(Article a: not isempty(a.user))
+invariant articlesHaveCategories: forall(Article a: not isempty(a.category))
+invariant postsHaveAuthors: forall(Post p: not isempty(p.user))
+invariant postsHaveTopics: forall(Post p: not isempty(p.topic))
+invariant topicsHaveAuthors: forall(Topic t: not isempty(t.user))
+invariant topicsHaveCategories: forall(Topic t: not isempty(t.category))
+
+corm
+
+invariant accountsHaveAuthors: forall(Account a: not isempty(a.author_user))
+invariant accountsHaveUsers: forall(Account a: not isempty(a.user))
+invariant activitiesHaveAuthors: forall(Activity a: not isempty(a.author_user))
+invariant aliasesHaveContacts: forall(Alias a: not isempty(a.contact))
+invariant campaignCompletedStagesHaveAuthors: forall(CampaignCompletedStage a: not isempty(a.author_user))
+invariant campaignLinesHaveAuthors: forall(CampaignLine a: not isempty(a.author_user))
+invariant campaignLinesHaveCampaigns: forall(CampaignLine cl: not isempty(cl.campaign))
+invariant campaignResultStagesHaveAuthors: forall(CampaignResultStage a: not isempty(a.author_user))
+invariant campaignsHaveAuthors: forall(Campaign a: not isempty(a.author_user))
+invariant contactsHaveAuthors: forall(Contact a: not isempty(a.author_user))
+invariant contractAttachmentsHaveContracts: forall(ContractAttachment ca: not isempty(ca.contract))
+invariant contractCategoriesHaveAuthors: forall(ContractCategory a: not isempty(a.author_user))
+invariant contractsHaveAuthors: forall(Contract a: not isempty(a.author_user))
+invariant documentsHaveAccounts: forall(Document d: not isempty(d.account))
+invariant documentsHaveAuthors: forall(Document a: not isempty(a.author_user))
+invariant emailAttachmentsHaveEmails: forall(EmailAttachment ea: not isempty(ea.email))
+invariant eventsHaveAuthors: forall(Event a: not isempty(a.author_user))
+invariant eventTypesHaveAuthors: forall(EventType a: not isempty(a.author_user))
+invariant importAccountsHaveAuthors: forall(ImportAccount a: not isempty(a.author_user))
+invariant importContactsHaveAuthors: forall(ImportContact a: not isempty(a.author_user))
+invariant importsHaveAuthors: forall(Import a: not isempty(a.author_user))
+invariant opportunitiesHaveAuthors: forall(Opportunity a: not isempty(a.author_user))
+invariant opportunityAttachmentsHaveOpportunities: forall(OpportunityAttachment oa: not isempty(oa.opportunity))
+invariant originsHaveAuthors: forall(Origin a: not isempty(a.author_user))
+invariant paymentModesHaveAuthors: forall(PaymentMode a: not isempty(a.author_user))
+invariant paymentTermsHaveAuthors: forall(PaymentTerm a: not isempty(a.author_user))
+invariant quotationsHaveAuthors: forall(Quotation a: not isempty(a.author_user))
+invariant quotationTemplatesHaveAuthors: forall(QuotationTemplate a: not isempty(a.author_user))
+invariant relationsHaveAuthors: forall(Relation a: not isempty(a.author_user))
+invariant tagsHaveAuthors: forall(Tag a: not isempty(a.author_user))
+invariant taskAttachmentsHaveTasks: forall(TaskAttachment ta: not isempty(ta.task))
+invariant tasksHaveAuthors: forall(Task a: not isempty(a.author_user))
+
+quant
+
+invariant mealsHaveUsers: forall(Meal m: not isempty(m.user))
+invariant placesHaveUsers: forall(Place m: not isempty(m.user))
+invariant sleepsHaveUsers: forall(Sleep m: not isempty(m.user))
+invariant weightsHaveUsers: forall(Weight m: not isempty(m.user))
+
+s2l
+
+invariant confidencesHaveAccounts: forall(Confidence c: not isempty(c.account))
+invariant customersHaveAccounts: forall(Customer c: not isempty(c.account))
+invariant opportunitiesHaveUsers: forall(Opportunity o: not isempty(o.user))
+invariant opportunitiesHaveCustomers: forall(Opportunity o: not isempty(o.customer))
+
+trado
+
+invariant cartItemsHaveCards: forall(CartItem ci: not isempty(ci.cart))
+invariant cartItemsHaveSkus: forall(CartItem ci: not isempty(ci.sku))
+invariant destinationsHaveCountries: forall(Destination d: not isempty(d.country))
+invariant destinationsHaveDeliveryServices: forall(Destination d: not isempty(d.delivery_service))
+invariant orderItemsHaveOrders: forall(OrderItem oi: not isempty(oi.order))
+invariant ordersHaveDeliveries: forall(Order o: not isempty(o.delivery))
+invariant stockAdjustmentsHaveSkus: forall(StockAdjustment sa: not isempty(sa.sku))
+invariant variantsHaveSkuVariants: forall(SkuVariant v: not isempty(v.sku))
+invariant transactionsHaveOrders: forall(Transaction t: not isempty(t.order))
+invariant permissionsHaveUsers: forall(Permission p: not isempty(p.user))
+
+wm-app
+
+invariant equipsHaveModels: forall(Equip e: not isempty(e.model))
+invariant equipsHaveWeapons: forall(Equip e: not isempty(e.weapon))
+invariant warcastersHaveModels: forall(Warcaster e: not isempty(e.model))
+invariant warjacksHaveModels: forall(Warjack e: not isempty(e.model))

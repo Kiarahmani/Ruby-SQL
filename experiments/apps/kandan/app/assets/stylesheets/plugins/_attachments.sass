@@ -1,0 +1,47 @@
+.no-media
+  font-size: 11px
+  color: #999
+  padding: 10px
+  text-align: center
+  text-transform: uppercase
+
+#file
+  display: none
+
+.file_list
+  list-style: none
+  margin: 1px 1px 1px 0
+  padding: 0
+  max-height: 158px
+  overflow-y: auto
+  +has-scrollbar
+
+  .file_item
+    color: #585D5F
+    line-height: 25px
+    padding: 5px 10px
+
+    img
+      width: 14px
+      height: 12px
+      margin-right: 10px
+
+    a
+      text-decoration: none
+      font-weight: bold
+      color: #585D5F
+
+      &:hover span
+        text-decoration: underline !important
+
+.widget-action-bar
+  form
+    height: 100%
+    min-height: 100%
+    margin: 0
+
+    .dropzone
+      line-height: 40px
+      height: 100%
+      min-height: 100%
+      text-align: center

@@ -1,0 +1,206 @@
+class FitbitAccount {
+  0..1 User user
+}
+class FoursquareAccount {
+  0..1 User user
+}
+class JournalEntry {
+  0..1 User user
+}
+class Meal {
+  0..1 User user
+}
+class Place {
+  0..1 User user
+}
+class Sleep {
+  0..1 User user
+}
+authenticable class User {
+  0+ Weight weights inverseof user
+  0+ Place places inverseof user
+  0+ Meal meals inverseof user
+  0+ Sleep sleeps inverseof user
+  0+ JournalEntry journal_entries inverseof user
+  0..1 WithingsAccount withings_account inverseof user
+  0..1 FitbitAccount fitbit_account inverseof user
+  0..1 FoursquareAccount foursquare_account inverseof user
+}
+class Weight {
+  0..1 User user
+}
+class WithingsAccount {
+  0..1 User user
+}
+
+permit create, delete, read currentuser
+permit create, delete, read currentuser.fitbit_account
+permit create, delete, read currentuser.foursquare_account
+permit create, delete, read currentuser.journal_entries
+permit create, delete, read currentuser.meals
+permit create, delete, read currentuser.places
+permit create, delete, read currentuser.sleeps
+permit create, delete, read currentuser.weights
+permit create, delete, read currentuser.withings_account
+
+action DashboardController__index {}
+action HomeController__index {}
+action JournalEntriesController__create {
+  at__journal_entry = create JournalEntry
+  assert at__journal_entry in currentuser.journal_entries
+}
+action JournalEntriesController__destroy {
+  at__journal_entry = oneof(JournalEntry)
+  assert at__journal_entry in currentuser.journal_entries
+  delete(at__journal_entry)
+}
+action JournalEntriesController__edit {
+  at__journal_entry = oneof(JournalEntry)
+  assert at__journal_entry in currentuser.journal_entries
+}
+action JournalEntriesController__index {
+  at__journal_entries = subset(JournalEntry)
+  assert at__journal_entries in currentuser.journal_entries
+  at__journal_entries = currentuser.journal_entries
+}
+action JournalEntriesController__new {
+  at__journal_entry = create JournalEntry
+  assert at__journal_entry in currentuser.journal_entries
+}
+action JournalEntriesController__show {
+  at__journal_entry = oneof(JournalEntry)
+  assert at__journal_entry in currentuser.journal_entries
+}
+action JournalEntriesController__update {
+  at__journal_entry = oneof(JournalEntry)
+  assert at__journal_entry in currentuser.journal_entries
+}
+action MealsController__create {
+  at__meal = create Meal
+  assert at__meal in currentuser.meals
+}
+action MealsController__destroy {
+  at__meal = oneof(Meal)
+  assert at__meal in currentuser.meals
+  delete(at__meal)
+}
+action MealsController__edit {
+  at__meal = oneof(Meal)
+  assert at__meal in currentuser.meals
+}
+action MealsController__index {
+  at__meals = subset(Meal)
+  assert at__meals in currentuser.meals
+  at__meals = currentuser.meals
+}
+action MealsController__new {
+  at__meal = create Meal
+  assert at__meal in currentuser.meals
+}
+action MealsController__show {
+  at__meal = oneof(Meal)
+  assert at__meal in currentuser.meals
+}
+action MealsController__update {
+  at__meal = oneof(Meal)
+  assert at__meal in currentuser.meals
+}
+action PlacesController__create {
+  at__place = create Place
+  assert at__place in currentuser.places
+}
+action PlacesController__destroy {
+  at__place = oneof(Place)
+  assert at__place in currentuser.places
+  delete(at__place)
+}
+action PlacesController__edit {
+  at__place = oneof(Place)
+  assert at__place in currentuser.places
+}
+action PlacesController__index {
+  at__places = subset(Place)
+  assert at__places in currentuser.places
+  at__places = currentuser.places
+}
+action PlacesController__new {
+  at__place = create Place
+  assert at__place in currentuser.places
+}
+action PlacesController__show {
+  at__place = oneof(Place)
+  assert at__place in currentuser.places
+}
+action PlacesController__update {
+  at__place = oneof(Place)
+  assert at__place in currentuser.places
+}
+action SleepsController__create {
+  at__sleep = create Sleep
+  assert at__sleep in currentuser.sleeps
+}
+action SleepsController__destroy {
+  at__sleep = oneof(Sleep)
+  assert at__sleep in currentuser.sleeps
+  delete(at__sleep)
+}
+action SleepsController__edit {
+  at__sleep = oneof(Sleep)
+  assert at__sleep in currentuser.sleeps
+}
+action SleepsController__index {
+  at__sleeps = subset(Sleep)
+  assert at__sleeps in currentuser.sleeps
+  at__sleeps = currentuser.sleeps
+}
+action SleepsController__new {
+  at__sleep = create Sleep
+  assert at__sleep in currentuser.sleeps
+}
+action SleepsController__show {
+  at__sleep = oneof(Sleep)
+  assert at__sleep in currentuser.sleeps
+}
+action SleepsController__update {
+  at__sleep = oneof(Sleep)
+  assert at__sleep in currentuser.sleeps
+}
+action UsersController__show {
+  at__user = oneof(User)
+  assert at__user in currentuser
+}
+action WeightsController__create {
+  at__weight = create Weight
+  assert at__weight in currentuser.weights
+}
+action WeightsController__destroy {
+  at__weight = oneof(Weight)
+  assert at__weight in currentuser.weights
+  delete(at__weight)
+}
+action WeightsController__edit {
+  at__weight = oneof(Weight)
+  assert at__weight in currentuser.weights
+}
+action WeightsController__index {
+  at__weights = subset(Weight)
+  assert at__weights in currentuser.weights
+  at__weights = currentuser.weights
+}
+action WeightsController__new {
+  at__weight = create Weight
+  assert at__weight in currentuser.weights
+}
+action WeightsController__show {
+  at__weight = oneof(Weight)
+  assert at__weight in currentuser.weights
+}
+action WeightsController__update {
+  at__weight = oneof(Weight)
+  assert at__weight in currentuser.weights
+}
+
+invariant mealsHaveUsers: forall(Meal m: not isempty(m.user))
+invariant placesHaveUsers: forall(Place m: not isempty(m.user))
+invariant sleepsHaveUsers: forall(Sleep m: not isempty(m.user))
+invariant weightsHaveUsers: forall(Weight m: not isempty(m.user))

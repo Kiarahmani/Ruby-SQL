@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+      <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :role => "form", class: "transparent-form"}) do |f| %>
+        <h3 class="text-center">Welcome back</h2>
+
+        <div class="form-group">
+          <%= f.label :email, class: "hidden" %>
+          <%= f.email_field :email, autofocus: true, class: 'form-control input-xl text-center', placeholder: "Email" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :password, class: "hidden" %>
+          <%= f.password_field :password, class: 'form-control input-xl text-center', placeholder: "Password" %>
+        </div>
+
+        <% if devise_mapping.rememberable? -%>
+          <div class="form-group">
+            <div class="checkbox">
+              <%= f.check_box :remember_me %>
+              <%= f.label :remember_me %>
+            </div>
+          </div>
+        <% end -%>
+
+        <%= f.submit "Log in", class: "btn btn-default btn-block btn-xl" %>
+
+      <% end %>
+    </div>
+  </div>
+
+  <p class="text-center">
+    <strong>
+      <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
+        <%= link_to "Forgot your password?", new_password_path(resource_name) %><br />
+      <% end -%>
+    </strong>
+  </p>
+</div>

@@ -1,0 +1,87 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "jquery-ui.js", "upload_form.js" %>
+<% end %>
+
+<%= form_tag upload_file_path, :multipart => true do %>
+	<%= label_tag 'datafile', 'Спецификации:' %>
+  <%= file_field_tag :datafile %>
+  <%= submit_tag "Импортировать" %>
+<% end %>
+<br/ >
+<%= form_for @search, :url => upload_index_path, :html => {:method => :get, :class => "yform full"} do |f| %>
+  <fieldset>
+    <div class="subcolumns">
+      <div class="c50l">
+        <div class="subcl type-text">
+          <%= f.label :master_project_contains, 'Объект' %>
+          <%= f.text_field :master_project_contains %>
+        </div>
+        <div class="subcl type-text">
+          <%= f.label :slave_project_contains, 'Подобъект' %>
+          <%= f.text_field :slave_project_contains %>
+        </div>
+      </div>
+      <div class="c50r">
+        <div class="subcr type-text">
+          <%= f.label :entity_contains, 'Номенклатура' %>
+          <%= f.text_field :entity_contains %>
+        </div>
+        <div class="subcr type-select">
+          <%= f.label :contractor_id, 'Менеджер' %>
+          <%= f.collection_select :contractor_id_equals, User.all, :id, :name, :include_blank => false %>
+        </div>
+      </div>
+    </div>			
+  </fieldset>
+  <div class="type-button">
+    <%= f.submit 'Отобрать' %>
+  </div>
+<% end %>
+<%= form_tag handle_upload_index_path, :method => :put  do %>
+  <%= select_tag :project_id, options_from_collection_for_select(Project.all, :id, :name) %>
+  <%= select_tag :category_id, options_from_collection_for_select(Category.all, :id, :name) %>
+  <%= select_tag :method, options_for_select([["Импортировать", "import"], ["Удалить", "remove"]])%>
+  <%= submit_tag("Выполнить") %>
+<table>
+	<colgroup width="10px"></colgroup>
+	<colgroup width="40%"></colgroup>
+	<colgroup></colgroup>
+	<colgroup width="100px"></colgroup>
+	<colgroup width="100px"></colgroup>
+	<colgroup width="100px"></colgroup>
+	<colgroup></colgroup>					
+	<colgroup></colgroup>
+	<colgroup></colgroup>	
+	<colgroup></colgroup>
+  <tr>
+    <th><%= check_box_tag 'mass'%></th>
+    <th>Позиция</th>
+    <th>Ед.</th>
+    <th>Кво</th>
+    <th>Цена</th>
+    <th>Доставка</th>
+    <th>Поставщик</th>
+    <th>Объект</th>
+    <th>Подобъект</th>
+    <th>Менеджер</th>
+  </tr>
+<% @uploads.each do |upload| %>
+  <tr>
+    <td align="center"><%= check_box_tag 'upload_ids[]', upload.id %></td>
+    <td><%= upload.entity %></td>
+    <td align="center"><%= upload.unit %></td>
+    <td align="right"><%= number_with_precision(upload.quantity, :precision => 2) %></td>
+    <td align="right"><%= number_to_currency(upload.price_with_vat, { :unit => '' }) %></td>
+    <td align="right"><%= number_to_currency(upload.coast_of_delivery, { :unit => '' }) %></td>
+    <td><%= upload.supplier %></td>
+    <td><%= upload.master_project %></td>
+    <td><%= upload.slave_project %></td>
+    <td><%= upload.contractor.name %></td>
+  </tr>
+<% end %>
+</table>
+
+<% end %>
+
+
+

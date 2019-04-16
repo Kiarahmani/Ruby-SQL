@@ -1,0 +1,39 @@
+<%= form_for @spell do |f| %>
+  <%= display_errors @spell %>
+
+	<div class="field">
+		<%= f.label :name %><br />
+		<%= f.text_field :name %>
+	</div>
+	<div class="field">
+		<%= f.label :cost %><br />
+		<%= f.text_field :cost, :size => 2, :maxlength => 2 %>
+	</div>
+	<div class="field">
+		<%= f.label :rng %><br />
+		<%= f.text_field :rng, :size => 4, :maxlength => 4 %>
+	</div>
+	<div class="field">
+		<%= f.label :aoe %><br />
+		<%= f.text_field :aoe, :size => 4, :maxlength => 4 %>
+	</div>
+	<div class="field">
+		<%= f.label :pow %><br />
+		<%= f.text_field :pow, :size => 2, :maxlength => 2 %>
+	</div>
+	<div class="field">
+		<%= f.label :up %><br />
+		<%= f.check_box :up %>
+	</div>
+	<div class="field">
+		<%= f.label :off %><br />
+		<%= f.check_box :off %>
+	</div>
+	<div class="field">
+		<%= f.label :desc %><br />
+		<%= f.text_area :desc %>
+	</div>
+	<div class="actions">
+		<%= f.submit %>
+	</div>
+<% end %>

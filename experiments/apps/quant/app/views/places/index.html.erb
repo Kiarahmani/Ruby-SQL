@@ -1,0 +1,55 @@
+<nav class="sub-header-nav-bar">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6 col-xs-3">
+        <h3>Places</h3>
+      </div>
+      <div class="col-sm-6 col-xs-9">
+        <ul class="state-switcher">
+          <li><%= link_to 'Add Place', new_place_path %></li>
+          <li class="active"><a href="#">Summary</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div id="map"></div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12 col-lg-10 col-lg-offset-1">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Lat</th>
+            <th>Lng</th>
+            <th class="hidden-xs">API</th>
+            <th class="hidden-xs"></th>
+            <th class="hidden-xs"></th>
+          </tr>
+        </thead>
+
+        <% @places.each do |place| %>
+          <tr>
+            <td><%= link_to place.date.to_formatted_s(:short), place %></td>
+            <td><%= place.lat %></td>
+            <td><%= place.lng %></td>
+            <td class="hidden-xs"><%= link_to 'JSON', place_path(place, format: :json) %></td>
+            <td class="hidden-xs"><%= link_to 'Edit', edit_place_path(place) %></td>
+            <td class="hidden-xs"><%= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+
+<script>
+  window.Places = [<% @places.each do |place| %>
+    [<%= place.lat %>,<%= place.lng %>],
+  <% end %>]
+</script>

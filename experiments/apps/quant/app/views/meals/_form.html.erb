@@ -1,0 +1,58 @@
+<%= form_for @meal, html: { role: "form", class: "transparent-form" } do |f| %>
+
+  <%= content_tag :div, class: [("has-error" if @meal.errors[:calories].present?), "form-group"] do %>
+    <% if @meal.errors[:calories].present? %>
+      <%= f.label :calories, class: "control-label" do %>Calories <%= @meal.errors[:calories].join(", ") %><% end %>
+    <% else %>
+      <%= f.label :calories, class: "hidden" %>
+    <% end %>
+    <%= f.text_field :calories, placeholder: "Calories", autofocus: true, class: "form-control input-xl text-center" %>
+  <% end %>
+
+  <%= content_tag :div, class: [("has-error" if @meal.errors[:fat].present?), "form-group"] do %>
+    <% if @meal.errors[:fat].present? %>
+      <%= f.label :fat, class: "control-label" do %>Fat <%= @meal.errors[:fat].join(", ") %><% end %>
+    <% else %>
+      <%= f.label :fat, class: "hidden" %>
+    <% end %>
+    <%= f.text_field :fat, placeholder: "Fat", autofocus: true, class: "form-control input-xl text-center" %>
+  <% end %>
+  
+  <%= content_tag :div, class: [("has-error" if @meal.errors[:carbohydrates].present?), "form-group"] do %>
+    <% if @meal.errors[:carbohydrates].present? %>
+      <%= f.label :carbohydrates, class: "control-label" do %>Carbs <%= @meal.errors[:carbohydrates].join(", ") %><% end %>
+    <% else %>
+      <%= f.label :carbohydrates, class: "hidden" %>
+    <% end %>
+    <%= f.text_field :carbohydrates, placeholder: "Carbs", autofocus: true, class: "form-control input-xl text-center" %>
+  <% end %>
+  
+  <%= content_tag :div, class: [("has-error" if @meal.errors[:protein].present?), "form-group"] do %>
+    <% if @meal.errors[:protein].present? %>
+      <%= f.label :protein, class: "control-label" do %>Carbs <%= @meal.errors[:protein].join(", ") %><% end %>
+    <% else %>
+      <%= f.label :protein, class: "hidden" %>
+    <% end %>
+    <%= f.text_field :protein, placeholder: "Protein", autofocus: true, class: "form-control input-xl text-center" %>
+  <% end %>
+
+  <%= content_tag :div, class: [("has-error" if @meal.errors[:description].present?), "form-group"] do %>
+    <% if @meal.errors[:description].present? %>
+      <%= f.label :description, class: "control-label" do %>Carbs <%= @meal.errors[:description].join(", ") %><% end %>
+    <% else %>
+      <%= f.label :description, class: "hidden" %>
+    <% end %>
+    <%= f.text_field :description, placeholder: "Description", autofocus: true, class: "form-control input-xl text-center" %>
+  <% end %>
+  
+  <%= content_tag :div, class: [("has-error" if @meal.errors[:date].present?), "form-group"] do %>
+    <% if @meal.errors[:date].present? %>
+      <%= f.label :date, class: "control-label" do %>Date <%= @meal.errors[:date].join(", ") %><% end %>
+    <% else %>
+      <%= f.label :date, class: "hidden" %>
+    <% end %>
+    <%= date_field("meal", "date", :discard_year => true, placeholder: "yyyy-mm-dd", class: "form-control input-xl text-center") %>
+  <% end %>
+  
+  <%= f.submit class: "btn btn-default btn-block btn-xl"%>
+<% end %>

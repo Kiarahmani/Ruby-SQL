@@ -1,0 +1,21 @@
+%h1
+  Welcome to #{ENV['ILLYAN_SITE_TITLE']}
+- if @services.size == 0
+  %p
+    Coming soon, #{ENV['ILLYAN_SITE_TITLE']} will provide a single login for all our sites.  Stay tuned!
+- else
+  %p One login for all these sites:
+  .row
+    - @services.each do |service|
+      .col-xs-12.col-sm-4
+        .panel.panel-default
+          .panel-heading
+            %h3.panel-title
+              = link_to service.urls.first do
+                - if !service.logo_url.blank?
+                  = image_tag service.logo_url, :alt => service.name
+                - else
+                  = service.name
+          .panel-body
+            - if !service.description.blank?
+              %p= simple_format service.description

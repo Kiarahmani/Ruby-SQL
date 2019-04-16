@@ -1,0 +1,42 @@
+<% content_for :title, 'Orders' %>
+<% content_for :breadcrumb, 'Orders' %>
+<% javascript :footer, 'admin/soca.datepicker' %>
+
+<div class="twelvecol">
+  <div class="page-header">
+    <h2 class="widget widget-header">Orders</h2>
+  </div>
+  <% if @orders.empty? %>
+    <div class="widget widget-content">
+      <div class="helper-notification">
+        <p>You don't have any orders yet.</p>
+        <i class="icon-box-add"></i>
+      </div>
+    </div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Order no.</th>
+            <th>PayPal ID</th>
+            <th>Shipping status</th>
+            <th>Payment status</th>
+            <th>Gross amount</th>
+            <th>Last updated</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @orders.each do |order| %>
+            <tr id="order_<%= order.id %>">
+              <%= render partial: 'admin/orders/single', format: [:js], locals: { order: order } %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+<div id="order-modal"></div>
+<div id="dispatch-order-modal"></div>

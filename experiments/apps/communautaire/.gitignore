@@ -1,0 +1,12 @@
+.bundle
+db/*.sqlite3
+log/*.log
+tmp/**/*
+.DS_Store
+
+/vendor/plugins/taps_plugin/
+/Taps/
+/script/taps
+/http:/
+/.idea/
+/sqlite3-1.3.3/
