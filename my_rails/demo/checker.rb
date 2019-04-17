@@ -1,5 +1,6 @@
 # checker.rb
-require 'rubygems' require 'curb'
+require 'rubygems' 
+require 'curb'
 
 gem_name = ARGV[0]
 

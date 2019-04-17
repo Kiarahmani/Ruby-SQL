@@ -1,6 +1,10 @@
 how to deploy mysql in docker
 https://www.techrepublic.com/article/how-to-deploy-and-use-a-mysql-docker-container/
 ---------------------------------------------------------------------------------------------------
+You should create the dockerfile in the RoR project directory itself. It assumes
+that structure.
+
+
 commands leading to a successful test:
 1- docker build -t demo . 
 2- docker run -it --rm demo bundle install
